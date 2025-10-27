@@ -1,0 +1,41 @@
+<div style="position: absolute; z-index: 100;">
+    <span style=" color: pink;">{{ "isPointerMoveActive : " + isPointerMoveActive }}</span>
+    <span style="color: rgb(138, 255, 168); margin-left:30px;">capturedDots: {{ capturedDots() }}, length: [{{ capturedDots().length }}]</span>
+    <button style="margin-left:30px;" (click)="stopSequenceAnimation()">Stop sequence$</button>
+    <span style=" color: white;">{{ "selectedValue (from app component) : " + selectedValue }}</span>
+</div>
+<div class="flip-card">
+    <div class="flip-card-inner">
+        <div #container
+            class="container flip-card-front" 
+            [class.no-events]="noEventsAvailableOnGrid"
+            [class.vibrate]="containerAnimationVibrateClass()" 
+            [class.shrink]="containerAnimationShrinkClass()"
+            (pointermove)="isPointerMoveActive && isDrawingSchema($event)"
+
+            (click)="!isTouchScreen && stopDrawingSchema($event)"
+            (pointerup)="isTouchScreen && stopDrawingSchema($event)"
+
+            (pointerdown)="isTouchScreen && releasePointerCaptureOnTouchScreen($event)"
+        >
+            <canvas #canvasTag [width]="canvas().width" [height]="canvas().height"></canvas>
+            <div class="grid-points" [class.pulse]="gridAnimationClass()">
+                @for(i of nbDots(); track i) {
+                    <div>
+                        <div #dot 
+                            class="dot" 
+                            [attr.data-num]="i" 
+                            [ngClass]="[capturedDots().includes(i-1) ? dotColorClass : '']"
+                            (pointerover)="handleDotHover(i - 1)"
+                        ></div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="flip-card-back">
+            <div>
+                <object id="iconCheckObj" type="image/svg+xml" data="svg/icon-check.svg"></object>
+            </div>
+        </div>
+    </div>
+</div>

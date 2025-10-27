@@ -1,0 +1,56 @@
+:host {
+    min-height: 100dvh;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    grid-template-rows: 1fr 0fr;
+    transition: grid-template-rows var(--transition-time-in-ms) ease;
+
+    &:has(.grid-points:not(:empty)) {
+        grid-template-rows: 1fr 5fr;
+    }
+}
+
+.wrapper-above-grid {
+    display: flex;
+    justify-content: center;
+    width: -webkit-fill-available;
+    position: relative;
+    z-index: 1;
+    animation: fadeInFromBottom 1s cubic-bezier(0.32, 0, 0.27, 0.97);
+
+    &:before {
+        content: "Schéma de verrouillage";
+        position: absolute;
+        font-size: clamp(1rem, 4vmin, 1.5rem);
+        color: var(--color-font);
+        translate: 0 -2em;
+        transition: opacity var(--transition-time-in-ms) ease;
+        // opacity: 0; //
+    }
+
+    /*  */
+    &:has(~ app-grid .grid-points):before {
+        opacity: 0;
+    }
+    /*  */
+
+    &:has(~ app-grid .grid-points:empty):before {
+        opacity: 1;
+    }
+    &:has(~ app-grid .grid-points:empty) .msg {
+        opacity: 0;
+        transform: translateY(50px);
+        transition-delay: 0s;
+    }
+}
+@keyframes fadeInFromBottom {
+    0% {
+        translate: 0 200px;
+        opacity: 0;
+    }
+    100% {
+        translate: 0 0;
+        opacity: 1;
+    }
+}

@@ -1,0 +1,11 @@
+#select-nb-points {
+    border: none;
+    border-radius: var(--border-radius);
+    padding: .5rem 1rem;
+    box-shadow: 0 0 20px 0px rgba(255, 255, 255, 1);
+}
+/* .wrapper-above-grid:has(+ .container .grid-points:empty) .msg {
+    opacity: 0;
+    transform: translateY(50px);
+    transition-delay: 0s;
+} */

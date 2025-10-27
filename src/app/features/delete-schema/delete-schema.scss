@@ -1,0 +1,35 @@
+:host {
+    display: contents;
+}
+#deleteSchema {
+    border: none;
+    background-color: transparent;
+    color: var(--color-font);
+    text-decoration: underline;
+    cursor: pointer;
+    position: absolute;
+    top: 9dvh;
+
+    opacity: 0;
+    @supports not (transition-behavior: allow-discrete) {
+        transition: ease var(--transition-time-in-ms) opacity;
+    }
+
+    @supports (transition-behavior: allow-discrete) {
+        display: none;
+        transition-property: opacity display;
+        transition-duration: var(--transition-time-in-ms);
+        transition-behavior: allow-discrete;
+    }
+
+    &.display {
+        opacity: 1;
+
+        @supports (transition-behavior: allow-discrete) {
+            display: block;
+            @starting-style {
+                opacity: 0;
+            }
+        }
+    }
+}

@@ -1,0 +1,42 @@
+:host {
+    display: contents;
+}
+.msg {
+    font-size: clamp(1rem, 4vmin, 1.5rem);
+    color: var(--color-font);
+    position: absolute;
+    top: 6vh;
+    opacity: 1;
+    transform: translateY(0);
+    transition-duration: 0.5s;
+    transition-property: all;
+    transition-timing-function: ease-out;
+    /* transition-delay: var(--transition-time-in-ms); */
+    transition-delay: 0.15s;
+    
+    &.anim-up {
+        animation-name: switchText;
+        animation-duration: var(--animation-msg-in-ms);
+        animation-fill-mode: forwards;
+    }
+
+    &.valid {
+        color: var(--color-stroke-valid);
+    }
+    &.invalid {
+        color: var(--color-stroke-error);
+    }
+}
+@keyframes switchText {
+    49% {
+        margin-top: -2dvh;
+        opacity: 0;
+    }
+    50% {
+        margin-top: 2dvh;
+    }
+    100% {
+        margin-top: 0dvh;
+        opacity: 1;
+    }
+}

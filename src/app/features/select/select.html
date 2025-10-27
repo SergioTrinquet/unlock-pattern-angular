@@ -1,0 +1,7 @@
+
+<select id="select-nb-points" (change)="onChangeSelect($event)">
+    <option selected>{{ defaultSelectValue }}</option>
+    @for (config of dotsSchemaConfig; track config.nbDotPerLC; let idx = $index) {
+        <option [value]="config.nbDotPerLC * config.nbDotPerLC">{{ selectOptions[idx] }}</option>
+    }
+</select>

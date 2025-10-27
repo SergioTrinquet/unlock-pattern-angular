@@ -1,0 +1,9 @@
+<!-- @if(text()) { -->
+<div class="msg" [ngClass]="`${customClass()} ${animUp()}`">
+    @if(!showButtons()) {
+        {{ text() }}
+    } @else {
+        <app-validation-schema></app-validation-schema>
+    }
+</div>
+<!-- } -->

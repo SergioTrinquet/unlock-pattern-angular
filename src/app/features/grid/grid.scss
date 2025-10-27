@@ -1,0 +1,219 @@
+#iconCheckObj {
+    display: block;
+}
+.flip-card {
+    width: max(70dvmin, 400px);
+    height: max(70dvmin, 400px);
+    border: 1px solid #f1f1f1;
+    perspective: 1000px; /* for 3D effect */
+    z-index: 2; /* Pour anim qd card retourné zoome : Doit passer au dessus des éléments en haut de page */
+
+    @media screen and (max-width: 400px) {
+        width: 100dvw;
+        height: 100dvw;
+    }
+
+    /* Surcharge pour anim qd selection ds liste deroulante */
+    &:has(.grid-points:empty) {
+        overflow: hidden;
+        opacity: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+
+        & #iconCheckObj {
+            display: none;
+        }
+    }
+    transition: height var(--transition-time-in-ms) ease, 
+            margin var(--transition-time-in-ms) ease,
+            padding var(--transition-time-in-ms) ease, 
+            opacity var(--transition-time-in-ms) ease;
+}
+
+.flip-card-inner { /* This container is needed to position the front and back side */
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform calc(var(--time-transition-flipping-card) * 1s);
+    transform-style: preserve-3d; /* ===>>>> A UNE INCIDENCE SUR PROP. backdrop-filter: blur() !!!! */
+}
+
+/* Do an horizontal flip */
+.flip-card.flip-over .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-card-front, 
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+}
+
+.flip-card-back {
+    transform: rotateY(180deg);
+    display: grid;
+    place-items: center;
+    & > div {
+        display: grid;
+        place-items: center;
+        height: var(--side-grid); 
+        aspect-ratio: 1;
+        background-color: var(--background-container);
+        -moz-backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        border-radius: var(--border-radius);
+        & > object {
+            width: 70%;
+            aspect-ratio: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        &.grow-after-flip-over {
+            position: absolute;
+            transition: height 0.3s cubic-bezier(0.47, 0, 0.75, 0.72);
+            height: 200dvmax;
+            & > object { opacity: 0; }
+        }
+    }
+}
+
+.container {
+    &.no-events {
+        pointer-events: none;
+    }
+
+    box-shadow: 0 0 4px rgb(255, 186, 186); /* Juste pour test */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: height var(--transition-time-in-ms) ease, 
+                margin var(--transition-time-in-ms) ease,
+                padding var(--transition-time-in-ms) ease, 
+                opacity var(--transition-time-in-ms) ease;
+
+    &.vibrate {
+        // animation: vibrate 0.4s;
+        animation: vibrate var(--time-vibrate-in-ms);
+    }
+    &.shrink {
+        // animation: var(--animation-shrink) 0.4s cubic-bezier(0.8, 0, 1, 0.56) forwards;
+        animation: var(--animation-shrink) var(--time-shrink-in-ms) cubic-bezier(0.8, 0, 1, 0.56) forwards;
+    }
+}
+.grid-points {
+    display: grid;
+    grid-template-columns: repeat(var(--nb-points-par-lgn-col), 1fr);
+
+    /* width: var(--side-grid);  */ /* Avec, on n'a plus l'anim qd selection ds liste déroulante */
+    height: var(--side-grid); 
+    border-radius: var(--border-radius);
+    
+    background-color: var(--background-container); 
+    -moz-backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+
+
+    &.pulse::after {
+        content: "";
+        position: absolute;
+        box-shadow: inset var(--color-stroke-valid) 0 0 0px 0px, var(--color-stroke-valid) 0 0 0 10px;
+        border-radius: var(--border-radius);
+        animation: pulse var(--time-pulse-in-ms) cubic-bezier(0, 0.5, 0.35, 1) forwards;
+        /* Version SANS 'backdrop-filter' sur sélecteur '.grid-points' */
+        /* height: var(--side-grid);
+        width: var(--side-grid);
+        background-color: var(--background-container); */
+        
+        /* Version AVEC 'backdrop-filter' sur sélecteur '.grid-points' */
+        height: 100%;
+        width: 100%;
+        background-color: var(--color-stroke);
+    }
+
+    div:not(.dot) {
+        display: grid;
+        place-content: center;
+        aspect-ratio: 1;
+        .dot {
+            width: calc(var(--diametre-point-hover) * 1dvh);
+            aspect-ratio: 1;
+            border-radius: 50%; 
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &:before {
+                content: "";
+                position: absolute;
+                background-color: var(--color-point);
+                border-radius: 50%;
+                opacity: 0;
+                width: 0;
+                aspect-ratio: 1;
+                transition: all .3s ease;
+            }
+            &:hover::before {
+                opacity: .2;
+                width: calc(var(--diametre-point-hover) * 1dvh);
+                aspect-ratio: 1;
+                cursor: pointer;
+            }
+            &:after {
+                content: "";
+                position: absolute;
+                border-radius: 50%;
+                background-color: var(--color-point);
+                width: calc(var(--diametre-point) * 1dvh);
+                aspect-ratio: 1;
+            }
+            &.error:after {
+                background-color: var(--color-stroke-error);
+            }
+            &.valid:after {
+                background-color: var(--color-stroke-valid);
+            }
+        }
+    }
+}
+canvas {
+    position: absolute;
+    inset: 0;
+}
+
+@keyframes vibrate {
+    20%, 60% {
+        transform: rotate(3deg);
+    }
+    40%, 80% {
+        transform: rotate(-3deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+@keyframes pulse {
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+        box-shadow: inset var(--color-stroke-valid) 0 0 10px 5px,
+                    var(--color-stroke-valid) 0 0 10px 20px;
+    }
+}
+@keyframes shrink {
+    60% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
