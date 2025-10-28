@@ -1,4 +1,5 @@
 import { STROKE } from "../../../app.constants";
+import vars from '../../../../styles/variables.json';
 
 export type Dot = {
     top: number,
@@ -25,9 +26,6 @@ export type StrokeColorationSequence = {
     duration: number
 }
 
+export type CssVarsKeys = keyof typeof vars;
+export type CssVarsValue<K extends CssVarsKeys> =  typeof vars[K];
 
-
-////
-// import { ANIMATIONS } from "../constants/grid.constants";
-export type Animation = { className: string, spanTime: number };
-////

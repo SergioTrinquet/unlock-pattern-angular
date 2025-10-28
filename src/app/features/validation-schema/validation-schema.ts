@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { TouchScreenService } from '../../shared/services/touch-screen/touch-screen.service';
-import { CookieService } from '../../core/service';
-import { UtilsService } from '../../shared/services/utils/utils.service';
+import { CookieService } from '../../core/service'
 import { AnimationService } from '../grid/services';
 
 @Component({
@@ -14,13 +13,19 @@ export class ValidationSchema {
   private TouchScreenService = inject(TouchScreenService);
   // private cookieService = inject(CookieService);
   private animationService = inject(AnimationService);
-  private utilsService = inject(UtilsService);
 
   protected onRedo(): void {
     this.TouchScreenService.vibrateOnTouch(100);
+    // colorationSchema(true, STROKE.color.error);
+    this.animationService.triggerContainerVibrateAnimation("timeVibrate")
+      .subscribe({
+        complete: () => { 
+          console.log("Animation Vibrate terminée !!!!");
+          // removeSchemaDrawing();
+          // setComplementaryInfos();
+        }
+      });
 
-    const vibrateGridTime = this.utilsService.getComputedStyles("--time-vibrate");
-    this.animationService.triggerContainerVibrateAnimation(vibrateGridTime); // MODIFIER SERVICE POUR NE PAS AVOIR A PASSER LA DUREE DE L4ANIM EN PARAMETRE
     /* 
     colorationSchema(true, STROKE.color.error);
     s.container.addEventListener("animationend", (e) => {
@@ -34,9 +39,17 @@ export class ValidationSchema {
 
   protected onValidate() {
     this.TouchScreenService.vibrateOnTouch([100, 50, 100]);
+    this.animationService.triggerGridAnimation("timePulse")
+      .subscribe({
+        complete: () => {
+          console.log("Animation Pulse terminée !!!!");
 
-    const pulseGridTime = this.utilsService.getComputedStyles("--time-pulse");
-    this.animationService.triggerGridAnimation(pulseGridTime);  // MODIFIER SERVICE POUR NE PAS AVOIR A PASSER LA DUREE DE L4ANIM EN PARAMETRE
+          this.animationService.triggerGridAnimation("timeShrink")
+            .subscribe({
+              complete: () => console.log("Animation Vibrate terminée !!!!")
+            });
+        }
+      });
 
     // this.cookieService.setCookie(this.state.selectedValueNbDots(), s.captureDots); // Création cookie
 

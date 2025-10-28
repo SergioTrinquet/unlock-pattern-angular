@@ -1,12 +1,14 @@
-import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { CssVarsKeys, CssVarsValue } from '../../types/grid.type';
+import { of, tap, delay, Observable, takeUntil, finalize } from 'rxjs';
+import { AbortAnimationService } from '../../../../shared/services/abort-animation/abort-animation.service';
+import vars from '../../../../../styles/variables.json';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnimationService {
-  // private utilsService = inject(UtilsService);
-  // protected animateVibrateContainerTime: number = this.utilsService.getComputedStyles("--time-vibrate"); // A SUPPRIMER DES QUE POSSIBLE
-  // protected animateShrinkContainerTime: number = this.utilsService.getComputedStyles("--time-shrink"); // A SUPPRIMER DES QUE POSSIBLE
+  private abortAnimationService = inject(AbortAnimationService);
 
   private _animateGrid = signal(false);
   private _animateContainerVibration = signal(false);
@@ -16,33 +18,24 @@ export class AnimationService {
   readonly animateContainerVibration = this._animateContainerVibration.asReadonly();
   readonly animateContainerShrink = this._animateContainerShrink.asReadonly();
 
-  triggerGridAnimation(delay: number) {
-    this._animateGrid.set(true);
-    setTimeout(() => this._animateGrid.set(false), delay);
+  public triggerContainerShrinkAnimation(CssVarKey: CssVarsKeys): Observable<null> {
+    return this.triggerAnimation(this._animateContainerShrink, CssVarKey);
   }
-  triggerContainerVibrateAnimation(delay: number) {
-    this._animateContainerVibration.set(true);
-    // setTimeout(() => this._animateContainerVibration.set(false), this.animateVibrateContainerTime);
-    setTimeout(() => this._animateContainerVibration.set(false), delay);
+  public triggerGridAnimation(CssVarKey: CssVarsKeys): Observable<null> {
+    return this.triggerAnimation(this._animateGrid, CssVarKey);
   }
-  triggerContainerShrinkAnimation(delay: number) {
-    this._animateContainerShrink.set(true);
-    // setTimeout(() => this._animateContainerShrink.set(false), this.animateShrinkContainerTime);
-    setTimeout(() => this._animateContainerShrink.set(false), delay);
-  }
-
-
-  /// V2///
-  /* 
-  triggerContainerVibrateAnimation(className: string) {
-    this.triggerAnimation(this._animateContainerVibration, className);
+  public triggerContainerVibrateAnimation(CssVarKey: CssVarsKeys): Observable<null> {
+    return this.triggerAnimation(this._animateContainerVibration, CssVarKey);
   } 
-  private triggerAnimation(signal: WritableSignal<boolean>, className: string): void {
-    // En fonction de la className, retrouver dans la constant 'ANIMATIONS' la 'duration' correspondante via un Type par exemple
-    signal.set(true);
-    setTimeout(() => signal.set(false), duration);
-  } 
-  */
-  //////
-
+  private triggerAnimation(signal: WritableSignal<boolean>, cssVarKeyName: CssVarsKeys): Observable<null> {
+    const duration: CssVarsValue<typeof cssVarKeyName> = vars[cssVarKeyName];
+    console.log("triggerAnimation", signal(), cssVarKeyName, duration) // TEST
+    return of(null).pipe(
+      tap(() => signal.set(true)),
+      delay(duration),
+      tap(() => signal.set(false)),
+      takeUntil(this.abortAnimationService.getAbort()), // ✅ annule si abort$ émet avant la fin
+      finalize(() => signal.set(false))
+    );
+  }
 }

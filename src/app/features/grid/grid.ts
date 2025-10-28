@@ -10,6 +10,7 @@ import { AnimationService, DrawingService, GridStateService, ResizeObserverServi
 import { SCHEMA_ELEMENTS_COLOR_CLASS, STROKES_COLORATION_SEQUENCE } from './constants/grid.constants';
 import { concatMap, delay, finalize, from, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 import { AbortAnimationService } from '../../shared/services/abort-animation/abort-animation.service';
+import vars from '../../../styles/variables.json';
 
 @Component({
   selector: 'app-grid',
@@ -49,7 +50,8 @@ export class GridComponent implements OnDestroy {
   });
 
   protected noEventsAvailableOnGrid = true;
-  protected transitionTime = this.utils.getComputedStyles("--transition-time");
+  // protected transitionTime = this.utils.getComputedStyles("--transition-time");
+  protected transitionTime = vars.transitionTime;
 
   private coordStrokes: Stroke[] = [];
   private ctx:CanvasRenderingContext2D | null = null;
@@ -242,7 +244,6 @@ export class GridComponent implements OnDestroy {
     this.strokeCurrentColor = STROKE.color[SCHEMA_ELEMENTS_COLOR_CLASS.default]; // Trait schéma avec couleur par défaut
 
     this.isPointerMoveActive = false; console.log("%c>>> resetSchema() : isPointerMoveActive = false", "background-color: green; color: white");// Cas ou dessin en cours sans click de fin, puis changement dans le select, puis retour sur la grille : Permet de réinitialiser le isPointerMoveActive
-    // this.stopSequenceAnimation();
     this.abortAnimationService.stopSequence();
   }
 
@@ -277,7 +278,7 @@ export class GridComponent implements OnDestroy {
   }
 
 
-  // Fonction pour arreter observable qui colore les traits
+  // Fonction TEST pour arreter observable qui colore les traits ou tt autre animation gérée en RxJs avec un 'abort$'
   stopSequenceAnimation(): void {
     this.abortAnimationService.stopSequence();
   }

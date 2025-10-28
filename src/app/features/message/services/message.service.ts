@@ -8,6 +8,7 @@ import { GridStateService } from '../../grid/services';
 import { SchemaValidityService } from '../../grid/services/schema-validity/schema-validity.service';
 import { message } from '../types/message.type';
 import { AbortAnimationService } from '../../../shared/services/abort-animation/abort-animation.service';
+import vars from '../../../../styles/variables.json';
 
 @Injectable({
   providedIn: 'root'
@@ -78,8 +79,7 @@ export class MessageService {
 
 
 
-  private utilsService = inject(UtilsService);
-  protected animationMsg: number = this.utilsService.getComputedStyles("--animation-msg");
+  private animationMsg: number = vars.animationMsg;
 
   private _text = signal<string>('');
   private _customClass = signal<string>("");

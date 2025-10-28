@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "prestart": "npm run generate:scss-vars",
     "start": "ng serve",
+    "prebuild": "npm run generate:scss-vars",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "generate:scss-vars": "node scripts/generate-scss-vars.js"
   },
   "prettier": {
     "printWidth": 100,
