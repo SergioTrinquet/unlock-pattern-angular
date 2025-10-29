@@ -2,8 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { SelectStateService } from '../../select/services/select-state.service';
 import { SchemaNbDotsConfig } from '../../select/types/select.type';
 import { MSG_CSS_CLASS, MSG_LABELS, DELAY_TO_DISPLAY } from '../constants/message.constants';
-import { of, tap, delay, Subject, takeUntil } from 'rxjs';
-import { UtilsService } from '../../../shared/services/utils/utils.service';
+import { of, tap, delay, takeUntil } from 'rxjs';
 import { GridStateService } from '../../grid/services';
 import { SchemaValidityService } from '../../grid/services/schema-validity/schema-validity.service';
 import { message } from '../types/message.type';
@@ -23,15 +22,12 @@ export class MessageService {
   private currentSchemaNbDotsMinMax = this.selectStateService.currentSchemaNbDotsMinMax;
   private capturedDotsLength = this.gridStateService.capturedDotsLength;
 
-  private messageTimeout: ReturnType<typeof setTimeout> = null!;
   private previousInfoText: string | undefined = undefined;
 
   setComplementaryInfos(calledFromClick?: MouseEvent["type"] | PointerEvent["type"] | undefined): void {  
     // console.log("Dans 'setComplementaryInfos > calledFromClick': ", calledFromClick); //TEST
     const currentSchemaNbDots: SchemaNbDotsConfig | null = this.currentSchemaNbDotsMinMax();
     const captureDotsLength = this.capturedDotsLength();
-
-    clearTimeout(this.messageTimeout); // Plus utile avec RxJs !
 
     // A la sélection d'une Grid OU qd tracé supprimé et que donc pas de points capturés
     if(!captureDotsLength) this.displayComplementaryInfos({text: `${this.isSchemaRecorded() ? MSG_LABELS.draw : MSG_LABELS.creation}`, anim: true});
@@ -45,15 +41,11 @@ export class MessageService {
         }
         if(currentSchemaNbDots && captureDotsLength < currentSchemaNbDots.nbDotMin) {
           this.displayComplementaryInfos({text: `${MSG_LABELS.invalid}${MSG_LABELS.notEnoughPoints}`, className: MSG_CSS_CLASS.invalid, anim: true});
-          //this.messageTimeout = setTimeout(() => { this.displayComplementaryInfos({text: MSG_LABELS.creation, anim: true}) }, DELAY_TO_DISPLAY.labelAfterNotEnoughDots);
-          // ou
           this.displayComplementaryInfos({text: MSG_LABELS.creation, anim: true, delay: DELAY_TO_DISPLAY.labelAfterNotEnoughDots})
         }
       } else {
         if(!isSchemaValid) {
           this.displayComplementaryInfos({text: MSG_LABELS.invalid, className: MSG_CSS_CLASS.invalid, anim: true});
-          // this.messageTimeout = setTimeout(() => { this.displayComplementaryInfos({text: MSG_LABELS.draw, anim: true}) }, DELAY_TO_DISPLAY.labelAfterInvalidSchema);
-          // ou
           this.displayComplementaryInfos({text: MSG_LABELS.draw, anim: true, delay: DELAY_TO_DISPLAY.labelAfterInvalidSchema}) // EN COURS DE DEVPOUR REMPLACER LE setTimeout()
         }
       }
@@ -107,38 +99,11 @@ export class MessageService {
 
   private displayComplementaryInfos(pm: message): void {
     // console.log("%cpm.text: ", 'background-color: lightblue; color: #000;', pm.text); //TEST
-    if(pm.text === this.previousInfoText) { /* console.log("%cMeme Text que precedemment : Ne pas faire d'anim! Sortir de la fonction", 'background-color: lightcoral; color: #000;'); */ return; }
+    if(pm.text === this.previousInfoText) return;
     this.previousInfoText = pm.text;
 
     const flagAnimation = !!pm.anim; 
     if(flagAnimation) {
-      // Version avec setTimeout() : Fonctionne!
-      /* if(!pm.className) this.setCustomClass(MSG_CSS_CLASS.default);
-      this.setAnimUp(MSG_CSS_CLASS.animation);
-      if(!!pm.className) this.setCustomClass(pm.className);
-      setTimeout(() => { 
-        if(pm.showButtons && !pm.text) this.setShowButtons(pm.showButtons);
-        if(!pm.showButtons && pm.text) this.setText(pm.text); 
-      }, this.animationMsg / 2);
-      setTimeout(() => { this.setAnimUp("") }, this.animationMsg); */
-
-      // Version avec RxJs : Fonctionne !
-      /* of(null).pipe(
-        tap(() => {
-          if(!pm.className) this.setCustomClass(MSG_CSS_CLASS.default);
-          this.setAnimUp(MSG_CSS_CLASS.animation);
-          if(!!pm.className) this.setCustomClass(pm.className)
-        }),
-        delay(this.animationMsg / 2),
-        tap(() => {
-          if(pm.showButtons && !pm.text) this.setShowButtons(pm.showButtons);
-          if(!pm.showButtons && pm.text) this.setText(pm.text);
-        }),
-        delay(this.animationMsg / 2),
-        tap(() => this.setAnimUp(""))
-      ).subscribe(); */
-
-      ////// Version avc RxJs + delay : Fonctionne ! //////
       let obs$ = of(null);
       if(pm.delay) { console.log("%cDelay avant affichage du message: " + pm.delay + " ms", 'background-color: lightgreen; color: #000;');
         obs$ = obs$.pipe(delay(pm.delay));
@@ -159,12 +124,11 @@ export class MessageService {
       );
       if(pm.delay) { console.log("%cDelay avant affichage du message PHASE 2: " + pm.delay + " ms", 'background-color: lightgreen; color: #000;');
         obs$ = obs$.pipe(
-          takeUntil(this.abortAnimationService.abort$) // ✅ annule si abort$ émet avant la fin
+          takeUntil(this.abortAnimationService.getAbort()) // ✅ annule si abort$ émet avant la fin
+          // , finalize(() => this.setShowButtons(false)) // EN COURS DE TEST
         );
       }
       obs$.subscribe();
-      ////////////////////
-
     } else {  
         if(pm.showButtons && !(pm.text || pm.text == "")) this.setShowButtons(pm.showButtons);
         if((pm.text || pm.text == "") && !pm.showButtons) this.setText(pm.text);
