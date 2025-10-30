@@ -21,15 +21,18 @@ export class AnimationService {
   public triggerContainerShrinkAnimation(CssVarKey: CssVarsKeys): Observable<null> {
     return this.triggerAnimation(this._animateContainerShrink, CssVarKey);
   }
+
   public triggerGridAnimation(CssVarKey: CssVarsKeys): Observable<null> {
     return this.triggerAnimation(this._animateGrid, CssVarKey);
   }
+
   public triggerContainerVibrateAnimation(CssVarKey: CssVarsKeys): Observable<null> {
     return this.triggerAnimation(this._animateContainerVibration, CssVarKey);
   } 
+
   private triggerAnimation(signal: WritableSignal<boolean>, cssVarKeyName: CssVarsKeys): Observable<null> {
     const duration: CssVarsValue<typeof cssVarKeyName> = vars[cssVarKeyName];
-    console.log("triggerAnimation", signal(), cssVarKeyName, duration) // TEST
+    // console.log("triggerAnimation", signal(), cssVarKeyName, duration) // TEST
     return of(null).pipe(
       tap(() => signal.set(true)),
       delay(duration),
