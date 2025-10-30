@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, Injector } from '@angular/core';
 import { COOKIE_NAME_PREFIX } from '../../../app.constants';
-import { SelectStateService } from '../../../features/select/services/select-state.service';
+import { SelectStateService } from '../../../features/select/services/select-state/select-state.service';
 
 @Injectable({
   providedIn: 'root'

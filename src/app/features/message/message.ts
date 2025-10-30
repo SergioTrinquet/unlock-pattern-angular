@@ -2,7 +2,7 @@ import { Component, effect, inject } from '@angular/core';
 import { MSG_LABELS } from './constants/message.constants';
 import { CommonModule } from '@angular/common';
 import { ValidationSchema } from '../validation-schema/validation-schema';
-import { SelectStateService } from '../select/services/select-state.service';
+import { SelectStateService } from '../select/services/select-state/select-state.service';
 import { MessageService } from './services/message.service';
 
 @Component({

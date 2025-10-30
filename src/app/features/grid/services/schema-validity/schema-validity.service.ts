@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { GridStateService } from '../grid-state/grid-state.service';
-import { SelectStateService } from '../../../select/services/select-state.service';
+import { SelectStateService } from '../../../select/services/select-state/select-state.service';
 import { COOKIE_NAME_PREFIX } from '../../../../app.constants';
 import { CookieService } from '../../../../core/service/cookie/cookie.service';
 
@@ -17,7 +17,7 @@ export class SchemaValidityService {
   private recordedSchema = this.selectState.recordedSchema;
   private selectedValueNbDots = this.selectState.selectedValueNbDots;
 
-  checkSchemaValidity(): boolean {
+  public checkSchemaValidity(): boolean {
     let validSchema = false;
     if(!this.recordedSchema()) {
         // Check si nb saisie points est bien entre nb min et nb max 
