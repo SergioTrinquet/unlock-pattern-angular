@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { DOTS_SCHEMA_CONFIGS } from '../../constants/select.constants';
-import { CookieService } from '../../../../core/service';
+import { CookieService } from '../../../../core/service/cookie/cookie.service';
 
 @Injectable({
   providedIn: 'root'

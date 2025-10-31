@@ -1,7 +1,7 @@
 import { Component, effect, inject } from '@angular/core';
 import { DELETE_SCHEMA_LABEL } from '../select/constants/select.constants';
-import { CookieService } from '../../core/service';
 import { SelectStateService } from '../select/services/select-state/select-state.service';
+import { CookieService } from '../../core/service/cookie/cookie.service';
 
 @Component({
   selector: 'app-delete-schema',
