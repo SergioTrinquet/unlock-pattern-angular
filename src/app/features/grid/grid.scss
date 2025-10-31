@@ -100,12 +100,10 @@
                 opacity var(--transition-time-in-ms) ease;
 
     &.vibrate {
-        // animation: vibrate 0.4s;
         animation: vibrate var(--time-vibrate-in-ms);
     }
     &.shrink {
-        // animation: var(--animation-shrink) 0.4s cubic-bezier(0.8, 0, 1, 0.56) forwards;
-        animation: var(--animation-shrink) var(--time-shrink-in-ms) cubic-bezier(0.8, 0, 1, 0.56) forwards;
+        animation: shrink var(--time-shrink-in-ms) cubic-bezier(0.8, 0, 1, 0.56) forwards;
     }
 }
 .grid-points {
