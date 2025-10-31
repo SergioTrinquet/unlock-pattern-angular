@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Output, ViewChild } from '@angular/core';
-import { SchemaNbDotsConfig } from './types/select.type';
 import { DOTS_SCHEMA_CONFIGS, DEFAULT_SELECT_VALUE, SELECT_OPTIONS } from './constants/select.constants';
 import { SelectControlService, SelectStateService } from './services';
 
@@ -15,7 +14,7 @@ export class SelectComponent implements AfterViewInit {
   private selectControlService = inject(SelectControlService);
   
   readonly defaultSelectValue: string = DEFAULT_SELECT_VALUE;
-  readonly dotsSchemaConfig : SchemaNbDotsConfig[] = DOTS_SCHEMA_CONFIGS;
+  readonly dotsSchemaConfig = DOTS_SCHEMA_CONFIGS;
   readonly selectOptions: string[] = this.dotsSchemaConfig.map(config => SELECT_OPTIONS(config));
   
   @ViewChild('select') selectRef!: ElementRef<HTMLSelectElement>;
@@ -34,7 +33,7 @@ export class SelectComponent implements AfterViewInit {
     this.selectStateService.setSelectedValueNbDots(selectedValue);
 
     if(this.selectStateService.isSelectedValueNbDots()) {
-        this.selectStateService.setRecordedSchema(); // Affectation var présence cookie
+        this.selectStateService.setRecordedSchema();
     } else {
         //removeComplementaryInfos();
     }
