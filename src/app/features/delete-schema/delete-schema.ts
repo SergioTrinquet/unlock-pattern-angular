@@ -2,6 +2,7 @@ import { Component, effect, inject } from '@angular/core';
 import { DELETE_SCHEMA_LABEL } from '../select/constants/select.constants';
 import { SelectStateService } from '../select/services/select-state/select-state.service';
 import { CookieService } from '../../core/service/cookie/cookie.service';
+import { SelectControlService } from '../select/services/select-control/select-control.service';
 
 @Component({
   selector: 'app-delete-schema',
@@ -22,14 +23,15 @@ export class DeleteSchemaComponent {
   }
 
   private cookieService = inject(CookieService);
+  private selectControlService = inject(SelectControlService);
 
   readonly linkLabel = DELETE_SCHEMA_LABEL;
   protected display = false;
 
   protected deleteRecordSchema(): void {
     this.cookieService.deleteCookie();
-    // goBackToStartStep();
     this.displayLink(false);
+    this.selectControlService.resetSelectToDefault();
   }
 
   displayLink(val: boolean): void {
