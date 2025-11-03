@@ -1,4 +1,5 @@
 @use './styles/_generated-vars';
+@use './styles/components/buttons';
 
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&display=swap');
@@ -24,10 +25,8 @@
     /* FIN Valeurs par défaut */
 
     --border-radius: 1vh;
-    /* --transition-time: 500; */
     --transition-time-in-ms: calc(var(--transition-time) * 1ms);
 
-    /* --animation-msg: 600; */
     --animation-msg-in-ms: calc(var(--animation-msg) * 1ms);
 
     /* couleurs éléments */
@@ -55,13 +54,8 @@
     --svg-dot-color: rgba(255, 255, 255, 0.7);
     --svg-line-color: rgba(255, 255, 255, 0.4);
 
-    /* --time-pulse: 500; */
     --time-pulse-in-ms: calc(var(--time-pulse) * 1ms);
-
-    /* --time-vibrate: 400; */
     --time-vibrate-in-ms: calc(var(--time-vibrate) * 1ms);
-
-    /* --time-shrink: 400; */
     --time-shrink-in-ms: calc(var(--time-shrink) * 1ms);
 }
 

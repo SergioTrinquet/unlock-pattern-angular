@@ -2,13 +2,11 @@
     display: contents;
 }
 #deleteSchema {
-    border: none;
+    border: solid 1px var(--color-font);
     background-color: transparent;
-    color: var(--color-font);
-    text-decoration: underline;
-    cursor: pointer;
+    padding: 0.2rem 1rem 0.3rem;
     position: absolute;
-    top: 9dvh;
+    top: calc(var(--message-top-position) + 6dvh);
 
     opacity: 0;
     @supports not (transition-behavior: allow-discrete) {
@@ -20,16 +18,36 @@
         transition-property: opacity display;
         transition-duration: var(--transition-time-in-ms);
         transition-behavior: allow-discrete;
+        margin-top: 2dvh;
     }
 
     &.display {
         opacity: 1;
-
+        margin-top: 0dvh;
         @supports (transition-behavior: allow-discrete) {
             display: block;
             @starting-style {
                 opacity: 0;
+                margin-top: 2dvh;
             }
+        }
+    }
+
+    overflow: clip;
+    &:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        background-color: var(--color-font);
+        left: -100%;
+        transition: left 0.2s ease;
+        z-index: -1;
+    }
+    &:hover {
+        color: var(--background-screen-from);
+        &:before {
+            left: 0;
         }
     }
 }

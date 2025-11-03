@@ -5,7 +5,7 @@
     font-size: clamp(1rem, 4vmin, 1.5rem);
     color: var(--color-font);
     position: absolute;
-    top: 6vh;
+    top: var(--message-top-position);
     opacity: 1;
     transform: translateY(0);
     transition-duration: 0.5s;
