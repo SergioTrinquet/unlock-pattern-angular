@@ -4,7 +4,6 @@
 .flip-card {
     width: max(70dvmin, 400px);
     height: max(70dvmin, 400px);
-    border: 1px solid #f1f1f1;
     perspective: 1000px; /* for 3D effect */
     z-index: 2; /* Pour anim qd card retourné zoome : Doit passer au dessus des éléments en haut de page */
 
