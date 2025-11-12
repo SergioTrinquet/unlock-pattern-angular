@@ -7,6 +7,7 @@ import { MessageService } from './services/message.service';
 
 @Component({
   selector: 'app-message',
+  standalone: true,
   imports: [CommonModule, ValidationSchema],
   templateUrl: './message.html',
   styleUrl: './message.scss'
