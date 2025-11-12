@@ -1,0 +1,122 @@
+:host {
+    --svg-schema-color: rgb(255, 255, 255);
+    --svg-dot-color: rgb(from var(--svg-schema-color) r g b / .7);
+    --svg-line-color: rgb(from var(--svg-schema-color) r g b / .4);
+
+    --squares-opacity: 0.15;
+    --nb-range: 4;
+    --time-animation-range-square-regular: 28;
+    --time-animation-range-square-in-sec-regular: calc(var(--time-animation-range-square-regular) * 1s); // ICI, PEUT ETRE FAIRE UN MIXIN OU UNE FUNCTION
+    --time-animation-range-square-slow: 43;
+    --time-animation-range-square-in-sec-slow: calc(var(--time-animation-range-square-slow) * 1s);  // ICI, PEUT ETRE FAIRE UN MIXIN OU UNE FUNCTION
+    --time-animation-range-square-hidden: 1.5;
+    --time-animation-range-square-in-sec-hidden: calc(var(--time-animation-range-square-hidden) * 1s);  // ICI, PEUT ETRE FAIRE UN MIXIN OU UNE FUNCTION
+    --space-between-squares: 5vmax;
+
+    display: contents;
+}
+.squares-wrapper {
+    position: fixed;
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    gap: var(--space-between-squares);
+    transform: rotate(-18deg) skew(3deg, 3deg);
+    transform-origin: center center;
+    inset: auto;
+    pointer-events: none;
+    opacity: var(--squares-opacity);
+
+    border: dashed 1px #fff;
+    width: 120vmax; /* Magic number */
+    height: 140%; /* Magic number */
+
+    &.fade-in { animation: fadeIn 1s ease-in-out forwards; }
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+    circle { fill: var(--svg-dot-color); }
+    path { stroke: var(--svg-line-color); stroke-width: 4; stroke-linecap: round; fill: none; }
+}
+.squares-range {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-between-squares);
+    padding-block: calc(var(--space-between-squares) / 2);
+    &.up {
+        align-self: flex-start;
+        animation: scroll-up var(--time-animation-range-square-in-sec-regular) linear infinite;
+        
+        &.slow {
+            animation: scroll-up var(--time-animation-range-square-in-sec-slow) linear infinite;
+        }
+        &.hidden {
+            animation: hidden-scroll-up var(--time-animation-range-square-in-sec-hidden) ease forwards;
+        }
+    } 
+    &.down {
+        align-self: flex-end;
+        animation: scroll-down var(--time-animation-range-square-in-sec-regular) linear infinite;
+        
+        &.slow {
+            animation: scroll-down var(--time-animation-range-square-in-sec-slow) linear infinite;
+        }
+        &.hidden {
+            animation: hidden-scroll-down var(--time-animation-range-square-in-sec-hidden) ease forwards;
+        }
+    } 
+    
+    & > div {
+        border-radius: 1vmax;
+        width: calc((100 / var(--nb-range)) * 1vmax);
+        aspect-ratio: 1;
+        box-shadow: -5px 5px 10px #000;
+        background: linear-gradient(45deg, color-mix(in srgb, var(--background-screen-from) 85%, white), color-mix(in srgb, var(--background-screen-from) 55%, white));
+
+        /* Juste pour Phase de dev. */
+        font-weight: bold;
+        font-size: 50px;
+        color: yellow;
+    }
+}
+
+// PEUT-ETRE ICI FAIRE DES MIXIN OU FUNCTION
+@keyframes scroll-up  {
+    100% {
+        transform: translate(0, -50%);
+    }
+}
+@keyframes scroll-down  {
+    100% {
+        transform: translate(0, 50%);
+    }
+}
+@keyframes hidden-scroll-up  {
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, -300vmax);
+        opacity: 0;
+    }
+}
+@keyframes hidden-scroll-down {
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 300vmax);
+        opacity: 0;
+    }
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: var(--squares-opacity);
+    }
+}
