@@ -7,6 +7,7 @@ import { ResetSchemaService } from './services/reset-schema/reset-schema.service
 
 @Component({
   selector: 'app-validation-schema',
+  standalone: true,
   imports: [],
   templateUrl: './validation-schema.html',
   styleUrl: './validation-schema.scss'
