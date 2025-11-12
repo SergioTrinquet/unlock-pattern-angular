@@ -4,4 +4,4 @@ type TupleOfLength<T extends readonly any[], N extends number> = T['length'] ext
                                                                     ? T 
                                                                     : never;
 
-export type NbStrikePatterns = TupleOfLength<typeof STRIKE_PATTERNS, typeof NB_SQUARES_PER_COLUMN>;
+export type StrikePatterns = TupleOfLength<typeof STRIKE_PATTERNS, typeof NB_SQUARES_PER_COLUMN>;

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { SQUARE_COLUMNS_CLASSES, NB_SQUARES_PER_COLUMN, STRIKE_PATTERNS, DOT_RADIUS, GRID } from './constants/background.constants';
-import { NbStrikePatterns } from './types/background.type';
+import { StrikePatterns } from './types/background.type';
+import { SelectStateService } from '../select/services';
 
 @Component({
   selector: 'app-background',
@@ -10,17 +11,16 @@ import { NbStrikePatterns } from './types/background.type';
   styleUrl: './background.scss'
 })
 export class BackgroundComponent implements OnInit {
+  protected isValueInListboxSelected = inject(SelectStateService).isSelectedValueNbDots;
   private nbSquaresColumn = NB_SQUARES_PER_COLUMN;
   protected squareColumns = SQUARE_COLUMNS_CLASSES;
   protected svgMaxNbImgs = Math.floor(this.nbSquaresColumn / 2);  
-
-  protected gridSide = GRID.side;
   private gridMargin = GRID.margin;
+  protected gridSide = GRID.side;
   protected dotRadius = DOT_RADIUS;
   protected viewBox = `0 0 ${this.gridSide} ${this.gridSide}`
-
   protected dotsCoord: Array<number[]> = [];
-  private strikePatterns: string[] = [];
+  private strikePaths: string[] = [];
 
   ngOnInit(): void {
     this.setDotsCoord();
@@ -42,25 +42,13 @@ export class BackgroundComponent implements OnInit {
 
   // Création tracés
   private setStrikePatterns(): void {
-    /* let sp = STRIKE_PATTERNS;
-    if(STRIKE_PATTERNS.length < this.nbSquaresColumn) {
-      const nbTimes = Math.floor(this.nbSquaresColumn / STRIKE_PATTERNS.length);
-      const copyStrikePatterns = [...STRIKE_PATTERNS]
-      for(let i = 0; i < nbTimes; i++) sp.push(...copyStrikePatterns)
-    }
-    if(sp.length !== this.nbSquaresColumn) sp = sp.slice(0, this.nbSquaresColumn);
-    // console.log("sp", sp) */
-
-    ////////
-    const sp:NbStrikePatterns = STRIKE_PATTERNS;
-    ////////
-
-    sp.map(strike => {
+    const strikes:StrikePatterns = STRIKE_PATTERNS;
+    strikes.map(strike => {
       let strikePath = "";
       strike.map((dot, i) => {
         strikePath += `${i !== 0 ? " " : ""}${i === 0 ? "M" : "L"}${this.dotsCoord[dot][0]} ${this.dotsCoord[dot][1]}`;
       })
-      this.strikePatterns.push(strikePath)
+      this.strikePaths.push(strikePath)
     })
   }
 
@@ -69,10 +57,8 @@ export class BackgroundComponent implements OnInit {
   }
 
   protected getPatternFor(idxSvg: number, idxColumn: number): string {
-    // console.log("AVANT:", idxSvg, "id column:", idxColumn)
-    // Même logique que ton code JS : alterner entre les 2 moitiés
+    // Alternance dans patterns 0-4 et 5-9
     if (idxColumn % 2) idxSvg += this.svgMaxNbImgs;
-    // console.log("APRES:", idxSvg, "id column:", idxColumn)
-    return this.strikePatterns[idxSvg];
+    return this.strikePaths[idxSvg];
   }
 }

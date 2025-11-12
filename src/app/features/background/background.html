@@ -1,24 +1,24 @@
-<div class="squares-wrapper">
-    @for(column of squareColumns; let idxColumn = $index; track idxColumn) {
-        <div 
-            class="squares-range"
-            [class]="[column.direction, column.speed]"
-        >
-        @for(i of nbSquares; track i) {
-            <div>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    [attr.viewBox]="viewBox"
-                    [attr.width]="gridSide" [attr.width]="gridSide"
-                >
-                    @for(dotCoord of dotsCoord; track idxCoordCircle; let idxCoordCircle = $index) {
-                        <circle [attr.cx]="dotCoord[0]" [attr.cy]="dotCoord[1]" [attr.r]="dotRadius"/>
-                    }
-                    <path [attr.d]="getPatternFor(i % svgMaxNbImgs, idxColumn)"></path>
-                </svg>
-            </div>
-
-        }
+<div class="squares-wrapper" [class.fade-in]="!isValueInListboxSelected()">
+@for(column of squareColumns; let idxColumn = $index; track idxColumn) {
+    <div 
+        class="squares-range"
+        [class]="[column.direction, column.speed]"
+        [class.hidden]="isValueInListboxSelected()"
+    >
+    @for(i of nbSquares; track i) {
+        <div>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                [attr.viewBox]="viewBox"
+                [attr.width]="gridSide" [attr.width]="gridSide"
+            >
+            @for(dotCoord of dotsCoord; track idxCoordCircle; let idxCoordCircle = $index) {
+                <circle [attr.cx]="dotCoord[0]" [attr.cy]="dotCoord[1]" [attr.r]="dotRadius"/>
+            }
+                <path [attr.d]="getPatternFor(i % svgMaxNbImgs, idxColumn)"></path>
+            </svg>
         </div>
     }
+    </div>
+}
 </div>
