@@ -34,8 +34,6 @@ export class SelectComponent implements AfterViewInit {
 
     if(this.selectStateService.isSelectedValueNbDots()) {
         this.selectStateService.setRecordedSchema();
-    } else {
-        //removeComplementaryInfos();
     }
   }
 }
