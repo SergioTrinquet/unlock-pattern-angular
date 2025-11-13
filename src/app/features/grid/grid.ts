@@ -11,7 +11,7 @@ import { SCHEMA_ELEMENTS_COLOR_CLASS, STROKES_COLORATION_SEQUENCE } from './cons
 import { concatMap, delay, finalize, from, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 import { AbortAnimationService } from '../../shared/services/abort-animation/abort-animation.service';
 import vars from '../../../styles/variables.json';
-import { ResetSchemaService } from '../validation-schema/services';
+import { ResetSchemaService } from '../validation-schema/services/reset-schema/reset-schema.service';
 
 @Component({
   selector: 'app-grid',
@@ -68,7 +68,7 @@ export class GridComponent implements OnDestroy {
   private flagCallResizeObservation = false;
   private resizeTimeout: ReturnType<typeof setTimeout> = 0;
 
-  private abortFlashSchema$ = new Subject<void>(); // TEST
+  private abortFlashSchema$ = new Subject<void>(); // TEST: Voir si on ne peut-on pas utiliser 'abortAnimationService.stopSequence()' à la place !!
 
   constructor() {
     // Partie avant dans fonction 'HandleDotHover()'
@@ -78,11 +78,11 @@ export class GridComponent implements OnDestroy {
       } else {
         if(this.capturedDotsLength() === this.selectState.selectedValueNbDots()) this.stopDrawingSchema();
       }
-     /* if(!untracked(this.selectState.recordedSchema)) {
-        if(this.capturedDotsLength() === untracked(this.selectState.currentSchemaNbDotsMinMax)?.nbDotMax) this.stopDrawingSchema();
-      } else {
-        if(this.capturedDotsLength() === untracked(this.selectState.selectedValueNbDots)) this.stopDrawingSchema();
-      } */
+    //  if(!untracked(this.selectState.recordedSchema)) {
+    //     if(this.capturedDotsLength() === untracked(this.selectState.currentSchemaNbDotsMinMax)?.nbDotMax) this.stopDrawingSchema();
+    //   } else {
+    //     if(this.capturedDotsLength() === untracked(this.selectState.selectedValueNbDots)) this.stopDrawingSchema();
+    //   }
     })
 
 
@@ -98,12 +98,15 @@ export class GridComponent implements OnDestroy {
     });
 
     // Qd click sur bouton 'Refaire le schéma'
-    effect(() => {
-      if(this.resetSchemaService.resetRequested()) {
-        this.abortFlashSchema$.next(); //
-        this.colorationSchema("error")
-      } else {
-        this.removeSchemaDrawing();
+    effect(() => {   console.log("Effect() bouton 'Refaire le schéma'", this.resetSchemaService.resetRequested());
+      if(this.resetSchemaService.resetRequested() !== null) {
+        if(this.resetSchemaService.resetRequested()) {
+          this.abortFlashSchema$.next(); //
+          this.colorationSchema("error")
+        } else {
+          this.removeSchemaDrawing();
+          queueMicrotask(() => this.resetSchemaService.triggerResetSchema(null));
+        }
       }
     })
   }
@@ -194,6 +197,15 @@ export class GridComponent implements OnDestroy {
       }
       // console.log("%c>>> handleDotHover() : isPointerMoveActive", "background-color: blue; color: white", this.isPointerMoveActive);
       this.gridState.setCapturedDots([...this.capturedDots(), idDot]);
+
+
+      ////////////////////
+      /* if(!this.selectState.recordedSchema()) {
+        if(this.capturedDotsLength() === this.selectState.currentSchemaNbDotsMinMax()?.nbDotMax) this.stopDrawingSchema();
+      } else {
+        if(this.capturedDotsLength() === this.selectState.selectedValueNbDots()) this.stopDrawingSchema();
+      } */
+      ////////////////////
     }
   }
 
