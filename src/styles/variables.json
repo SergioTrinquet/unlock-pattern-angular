@@ -3,5 +3,6 @@
     "animationMsg": 600,
     "timeVibrate": 400,
     "timePulse": 500,
-    "timeShrink": 400
+    "timeShrink": 400, 
+    "timeScreenSuccessVanish": 500
 }

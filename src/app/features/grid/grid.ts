@@ -7,16 +7,19 @@ import { TouchScreenService } from '../../shared/services/touch-screen/touch-scr
 import { STROKE } from '../../app.constants';
 import { MessageService } from '../message/services/message.service';
 import { AnimationService, DrawingService, GridStateService, ResizeObserverService, SchemaValidityService } from './services';
-import { SCHEMA_ELEMENTS_COLOR_CLASS, STROKES_COLORATION_SEQUENCE } from './constants/grid.constants';
-import { concatMap, delay, finalize, from, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { SelectControlService } from '../select/services';
 import { AbortAnimationService } from '../../shared/services/abort-animation/abort-animation.service';
-import vars from '../../../styles/variables.json';
 import { ResetSchemaService } from '../validation-schema/services/reset-schema/reset-schema.service';
+import { SCHEMA_ELEMENTS_COLOR_CLASS, STROKES_COLORATION_SEQUENCE, SEQUENCE_ANIMATION_DRAWING_SUCCESS } from './constants/grid.constants';
+import { concat, concatMap, delay, finalize, from, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import vars from '../../../styles/variables.json';
+import { SvgAnimationDirective } from './directives/svg-animation.directive';
+import { MsgSuccessComponent } from '../msg-success/msg-success';
 
 @Component({
   selector: 'app-grid',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SvgAnimationDirective, MsgSuccessComponent],
   templateUrl: './grid.html',
   styleUrl: './grid.scss'
     // , providers: [ResizeObserverService]
@@ -33,6 +36,7 @@ export class GridComponent implements OnDestroy {
   private messageService = inject(MessageService);
   protected abortAnimationService = inject(AbortAnimationService);
   private resetSchemaService = inject(ResetSchemaService);
+  private selectControlService = inject(SelectControlService);
 
   // private dotsCoord = this.gridState.dotsCoord;
   private dotsCoord = this.resizeObserverService.dotsCoord; // BONNE VERSION
@@ -245,15 +249,65 @@ export class GridComponent implements OnDestroy {
             if(!(!this.selectState.recordedSchema() && isSchemaValid)) { // Tous les cas de figure sauf schema pas enregistré et valide !!
               this.removeSchemaDrawing(); 
             }
-            // if(s.recordedSchema && isSchemaValid) { 
+            if(this.selectState.recordedSchema() && isSchemaValid) { 
             //     if (!animationSuccessModule) animationSuccessModule = await import("./animationSuccess.js");
-            //     animationSuccessModule.runSequenceSchemaValid();
-            // } 
+            console.log("On va déclencher 'runSequenceSchemaValid()'")  
+            this.runSequenceSchemaValid();
+            } 
           }
         })
 
     }
   }
+
+
+
+  ///////////// A METTRE DANS UN SERVICE !! //////////////
+  @ViewChild(SvgAnimationDirective) svgAnimationDirective!: SvgAnimationDirective;
+  protected flipOver = false;
+  protected growAfterFlipOver = false;
+  protected screenMsgSuccess = false;
+  protected screenToClose = signal(false);
+  runSequenceSchemaValid() {
+    const { stepCardFlip, stepAnimSVG, stepDisplayMsgSuccess, stepDelayBeforeMsgSuccessClose } = SEQUENCE_ANIMATION_DRAWING_SUCCESS;
+    concat(
+      of(null).pipe(
+        tap(() => {
+          this.svgAnimationDirective.init();
+          this.flipOver = true;
+          this.svgAnimationDirective.resetAnimations();
+        }),
+        delay(stepCardFlip),
+      ),
+      of(null).pipe(
+        tap(() => this.svgAnimationDirective.startAnimation()),
+        delay(stepAnimSVG),
+      ),
+      of(null).pipe(
+        tap(() => {
+          this.growAfterFlipOver = true;
+          this.screenMsgSuccess = true;
+        }),
+        delay(stepDisplayMsgSuccess),
+      ),
+      of(null).pipe(
+        tap(() => {
+          this.selectControlService.resetSelectToDefault();
+          this.flipOver = false;
+          this.growAfterFlipOver = false;
+        }),
+        delay(stepDelayBeforeMsgSuccessClose),
+        tap(() => {
+          this.screenToClose.set(true); 
+          setTimeout(() => {
+            this.screenToClose.set(false);
+            this.screenMsgSuccess = false;
+          }, vars.timeScreenSuccessVanish);
+        })
+      )
+    ).subscribe();
+  }
+  ////////// FIN : A METTRE DANS UN SERVICE !! ///////////
 
 
   // PEUT ETRE VIRER UNE DES 2 FONCTIONS CI-DESSOUS CAR PAS UTILE
@@ -275,7 +329,7 @@ export class GridComponent implements OnDestroy {
 
 
   
-  flashSchema(isSchemaValid: boolean): Observable<null> {   console.log("%cDans flashSchema()", "background-color: red; color: #fff;")
+  flashSchema(isSchemaValid: boolean): Observable<null> {   // console.log("%cDans flashSchema()", "background-color: red; color: #fff;")
     const sequence: StrokeColorationSequence[] = STROKES_COLORATION_SEQUENCE.map(p => ({
       ...p, // copie les propriétés
       color: (p.color === "custom" ? (isSchemaValid ? SCHEMA_ELEMENTS_COLOR_CLASS.valid : SCHEMA_ELEMENTS_COLOR_CLASS.error) : p.color) // écrase la valeur

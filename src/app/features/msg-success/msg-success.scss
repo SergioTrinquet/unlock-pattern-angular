@@ -1,0 +1,41 @@
+:host > div {
+    --msg-success-height-shadow: 5dvh;
+    --time-transition-msg-success: var(--time-screen-success-vanish, 500); // Si pas de valeur générée pour la custom key '--time-screen-success-vanish', 500 comme valeur par défaut
+    
+    z-index: 3;
+    position: fixed;
+    inset: 0;
+    display: grid;
+    background-color: var(--background-container);
+    -moz-backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
+    backdrop-filter: blur(100px);
+    box-shadow: 0 0 var(--msg-success-height-shadow) rgb(33 33 33 / 70%);
+    opacity: 0;
+    color: #fff;
+    font-size: 5rem;
+    
+    @supports not (transition-behavior: allow-discrete) {
+        animation: msgSuccessFadeIn 1s ease-in-out forwards;
+        transition: translate calc(var(--time-transition-msg-success) * 1ms) ease-in;
+    }
+    @supports (transition-behavior: allow-discrete) {
+        opacity: 1;
+        @starting-style { opacity: 0; }
+        transition:
+            opacity 1s ease-in-out,
+            translate calc(var(--time-transition-msg-success) * 1ms) ease-in;
+    }
+
+    & > div {
+        place-self: center;
+        text-align: center;
+        margin-inline: 5vw;
+    }
+    &.up {
+        translate: 0 calc(-100dvh - var(--msg-success-height-shadow));
+    }
+}
+@keyframes msgSuccessFadeIn {
+    100% { opacity: 1; }
+}
