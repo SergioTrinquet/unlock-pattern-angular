@@ -270,41 +270,33 @@ export class GridComponent implements OnDestroy {
   protected screenToClose = signal(false);
   runSequenceSchemaValid() {
     const { stepCardFlip, stepAnimSVG, stepDisplayMsgSuccess, stepDelayBeforeMsgSuccessClose } = SEQUENCE_ANIMATION_DRAWING_SUCCESS;
-    concat(
-      of(null).pipe(
-        tap(() => {
-          this.svgAnimationDirective.init();
-          this.flipOver = true;
-          this.svgAnimationDirective.resetAnimations();
-        }),
-        delay(stepCardFlip),
-      ),
-      of(null).pipe(
-        tap(() => this.svgAnimationDirective.startAnimation()),
-        delay(stepAnimSVG),
-      ),
-      of(null).pipe(
-        tap(() => {
-          this.growAfterFlipOver = true;
-          this.screenMsgSuccess = true;
-        }),
-        delay(stepDisplayMsgSuccess),
-      ),
-      of(null).pipe(
-        tap(() => {
-          this.selectControlService.resetSelectToDefault();
-          this.flipOver = false;
-          this.growAfterFlipOver = false;
-        }),
-        delay(stepDelayBeforeMsgSuccessClose),
-        tap(() => {
-          this.screenToClose.set(true); 
-          setTimeout(() => {
-            this.screenToClose.set(false);
-            this.screenMsgSuccess = false;
-          }, vars.timeScreenSuccessVanish);
-        })
-      )
+    of(null).pipe(
+      tap(() => {
+        this.svgAnimationDirective.init();
+        this.flipOver = true;
+        this.svgAnimationDirective.resetAnimations();
+      }),
+      delay(stepCardFlip),
+      tap(() => this.svgAnimationDirective.startAnimation()),
+      delay(stepAnimSVG),
+      tap(() => {
+        this.growAfterFlipOver = true;
+        this.screenMsgSuccess = true;
+      }),
+      delay(stepDisplayMsgSuccess),
+      tap(() => {
+        this.selectControlService.resetSelectToDefault();
+        this.flipOver = false;
+        this.growAfterFlipOver = false;
+      }),
+      delay(stepDelayBeforeMsgSuccessClose),
+      tap(() => {
+        this.screenToClose.set(true); 
+        setTimeout(() => {
+          this.screenToClose.set(false);
+          this.screenMsgSuccess = false;
+        }, vars.timeScreenSuccessVanish);
+      })
     ).subscribe();
   }
   ////////// FIN : A METTRE DANS UN SERVICE !! ///////////
