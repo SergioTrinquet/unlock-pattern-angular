@@ -32,7 +32,6 @@ export class AnimationService {
 
   private triggerAnimation(signal: WritableSignal<boolean>, cssVarKeyName: CssVarsKeys): Observable<null> {
     const duration: CssVarsValue<typeof cssVarKeyName> = vars[cssVarKeyName];
-    // console.log("triggerAnimation", signal(), cssVarKeyName, duration) // TEST
     return of(null).pipe(
       tap(() => signal.set(true)),
       delay(duration),
