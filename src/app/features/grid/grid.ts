@@ -11,7 +11,7 @@ import { SelectControlService } from '../select/services';
 import { AbortAnimationService } from '../../shared/services/abort-animation/abort-animation.service';
 import { ResetSchemaService } from '../validation-schema/services/reset-schema/reset-schema.service';
 import { SCHEMA_ELEMENTS_COLOR_CLASS, STROKES_COLORATION_SEQUENCE, SEQUENCE_ANIMATION_DRAWING_SUCCESS } from './constants/grid.constants';
-import { concat, concatMap, delay, finalize, from, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { concatMap, delay, finalize, from, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 import vars from '../../../styles/variables.json';
 import { SvgAnimationDirective } from './directives/svg-animation.directive';
 import { MsgSuccessComponent } from '../msg-success/msg-success';
@@ -22,7 +22,6 @@ import { MsgSuccessComponent } from '../msg-success/msg-success';
   imports: [CommonModule, SvgAnimationDirective, MsgSuccessComponent],
   templateUrl: './grid.html',
   styleUrl: './grid.scss'
-    // , providers: [ResizeObserverService]
 })
 export class GridComponent implements OnDestroy {
   private utils = inject(UtilsService);
@@ -56,7 +55,6 @@ export class GridComponent implements OnDestroy {
   });
 
   protected noEventsAvailableOnGrid = true;
-  protected transitionTime = vars.transitionTime;
 
   private coordStrokes: Stroke[] = [];
   private ctx:CanvasRenderingContext2D | null = null;
@@ -250,9 +248,7 @@ export class GridComponent implements OnDestroy {
               this.removeSchemaDrawing(); 
             }
             if(this.selectState.recordedSchema() && isSchemaValid) { 
-            //     if (!animationSuccessModule) animationSuccessModule = await import("./animationSuccess.js");
-            console.log("On va déclencher 'runSequenceSchemaValid()'")  
-            this.runSequenceSchemaValid();
+              this.runSequenceSchemaValid();
             } 
           }
         })
@@ -370,7 +366,7 @@ export class GridComponent implements OnDestroy {
       }
       
         // if(s.isTouchScreen) s.container.addEventListener('pointerdown', releasePointerCaptureOnTouchScreen);
-    }, this.transitionTime);
+    }, vars.transitionTime);
   }
 
   resetGrid(): void {
