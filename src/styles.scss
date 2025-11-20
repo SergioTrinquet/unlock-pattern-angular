@@ -25,9 +25,9 @@
     /* FIN Valeurs par défaut */
 
     --border-radius: 2vh;
-    --transition-time-in-ms: calc(var(--transition-time) * 1ms);
+    --transition-time-in-ms: calc(var(--transition-time, 500) * 1ms);
 
-    --animation-msg-in-ms: calc(var(--animation-msg) * 1ms);
+    --animation-msg-in-ms: calc(var(--animation-msg, 600) * 1ms);
 
     /* couleurs éléments */
     --background-screen-from: hsl(260, 35%, 5%);
@@ -40,9 +40,9 @@
  
     --time-transition-flipping-card: 0.8;
 
-    --time-pulse-in-ms: calc(var(--time-pulse) * 1ms);
-    --time-vibrate-in-ms: calc(var(--time-vibrate) * 1ms);
-    --time-shrink-in-ms: calc(var(--time-shrink) * 1ms);
+    --time-pulse-in-ms: calc(var(--time-pulse, 500) * 1ms);
+    --time-vibrate-in-ms: calc(var(--time-vibrate, 400) * 1ms);
+    --time-shrink-in-ms: calc(var(--time-shrink, 400) * 1ms);
 }
 
 * { /* Reset */
