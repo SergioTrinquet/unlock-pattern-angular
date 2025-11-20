@@ -32,7 +32,7 @@ export class ValidationSchema {
       });
   }
 
-  protected onValidate() {
+  protected onValidate(): void {
     this.touchScreenService.vibrateOnTouch([100, 50, 100]);
     this.animationService.triggerGridAnimation("timePulse")
       .subscribe({
