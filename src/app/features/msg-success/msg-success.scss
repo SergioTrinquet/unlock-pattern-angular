@@ -6,6 +6,7 @@
     position: fixed;
     inset: 0;
     display: grid;
+    user-select: none;
     background-color: var(--background-container);
     -moz-backdrop-filter: blur(100px);
     -webkit-backdrop-filter: blur(100px);
@@ -14,7 +15,7 @@
     opacity: 0;
     color: #fff;
     font-size: 5rem;
-    
+
     @supports not (transition-behavior: allow-discrete) {
         animation: msgSuccessFadeIn 1s ease-in-out forwards;
         transition: translate calc(var(--time-transition-msg-success) * 1ms) ease-in;
