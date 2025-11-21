@@ -1,4 +1,4 @@
-import { Component, computed, effect, ElementRef, inject, Input, OnDestroy, QueryList, signal, Signal, SimpleChanges, untracked, ViewChild, ViewChildren } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, Input, OnDestroy, QueryList, Signal, SimpleChanges, untracked, ViewChild, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SelectStateService } from '../select/services/select-state/select-state.service';
 import { UtilsService } from '../../shared/services/utils/utils.service';
@@ -6,15 +6,14 @@ import { Stroke, StrokeColor, StrokeColorationSequence } from './types/grid.type
 import { TouchScreenService } from '../../shared/services/touch-screen/touch-screen.service';
 import { STROKE } from '../../app.constants';
 import { MessageService } from '../message/services/message.service';
-import { AnimationService, DrawingService, GridStateService, ResizeObserverService, SchemaValidityService } from './services';
-import { SelectControlService } from '../select/services';
+import { AnimationService, DrawingService, GridStateService, ResizeObserverService, SchemaValidityService, SequenceSchemaValidService } from './services';
 import { AbortAnimationService } from '../../shared/services/abort-animation/abort-animation.service';
 import { ResetSchemaService } from '../validation-schema/services/reset-schema/reset-schema.service';
-import { SCHEMA_ELEMENTS_COLOR_CLASS, STROKES_COLORATION_SEQUENCE, SEQUENCE_ANIMATION_DRAWING_SUCCESS } from './constants/grid.constants';
-import { concatMap, delay, finalize, from, Observable, of, Subject, takeUntil, tap } from 'rxjs';
-import vars from '../../../styles/variables.json';
+import { SCHEMA_ELEMENTS_COLOR_CLASS, STROKES_COLORATION_SEQUENCE } from './constants/grid.constants';
+import { concatMap, delay, finalize, from, Observable, of, Subject, takeUntil } from 'rxjs';
 import { SvgAnimationDirective } from './directives/svg-animation.directive';
 import { MsgSuccessComponent } from '../msg-success/msg-success';
+import vars from '../../../styles/variables.json';
 
 @Component({
   selector: 'app-grid',
@@ -35,7 +34,7 @@ export class GridComponent implements OnDestroy {
   private messageService = inject(MessageService);
   protected abortAnimationService = inject(AbortAnimationService);
   private resetSchemaService = inject(ResetSchemaService);
-  private selectControlService = inject(SelectControlService);
+  private sequenceSchemaValidService = inject(SequenceSchemaValidService);
 
   // private dotsCoord = this.gridState.dotsCoord;
   private dotsCoord = this.resizeObserverService.dotsCoord; // BONNE VERSION
@@ -65,6 +64,12 @@ export class GridComponent implements OnDestroy {
   @ViewChild('container') containerRef!: ElementRef;
   @ViewChild('canvasTag') canvasRef!: ElementRef;
   @ViewChildren('dot') dotsRef!: QueryList<ElementRef<HTMLElement>>;
+
+  @ViewChild(SvgAnimationDirective) svgAnimationDirective!: SvgAnimationDirective;
+  protected flipOver = this.sequenceSchemaValidService.cardFlipOver;
+  protected growAfterFlipOver = this.sequenceSchemaValidService.growCardAfterFlipOver;
+  protected screenMsgSuccess = this.sequenceSchemaValidService.screenMsgSuccess;
+  protected screenToClose = this.sequenceSchemaValidService.screenToClose;
 
   @Input() selectedValue!: number | null;
   private flagCallResizeObservation = false;
@@ -114,7 +119,8 @@ export class GridComponent implements OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.ctx = this.canvasRef.nativeElement.getContext("2d")
+    this.ctx = this.canvasRef.nativeElement.getContext("2d");
+    this.sequenceSchemaValidService.registerSvgDirective(this.svgAnimationDirective);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -248,54 +254,14 @@ export class GridComponent implements OnDestroy {
               this.removeSchemaDrawing(); 
             }
             if(this.selectState.recordedSchema() && isSchemaValid) { 
-              this.runSequenceSchemaValid();
+              // this.runSequenceSchemaValid();
+              this.sequenceSchemaValidService.runSequenceSchemaValid();
             } 
           }
         })
 
     }
   }
-
-
-
-  ///////////// A METTRE DANS UN SERVICE !! //////////////
-  @ViewChild(SvgAnimationDirective) svgAnimationDirective!: SvgAnimationDirective;
-  protected flipOver = false;
-  protected growAfterFlipOver = false;
-  protected screenMsgSuccess = false;
-  protected screenToClose = signal(false);
-  runSequenceSchemaValid() {
-    const { stepCardFlip, stepAnimSVG, stepDisplayMsgSuccess, stepDelayBeforeMsgSuccessClose } = SEQUENCE_ANIMATION_DRAWING_SUCCESS;
-    of(null).pipe(
-      tap(() => {
-        this.svgAnimationDirective.init();
-        this.flipOver = true;
-        this.svgAnimationDirective.resetAnimations();
-      }),
-      delay(stepCardFlip),
-      tap(() => this.svgAnimationDirective.startAnimation()),
-      delay(stepAnimSVG),
-      tap(() => {
-        this.growAfterFlipOver = true;
-        this.screenMsgSuccess = true;
-      }),
-      delay(stepDisplayMsgSuccess),
-      tap(() => {
-        this.selectControlService.resetSelectToDefault();
-        this.flipOver = false;
-        this.growAfterFlipOver = false;
-      }),
-      delay(stepDelayBeforeMsgSuccessClose),
-      tap(() => {
-        this.screenToClose.set(true); 
-        setTimeout(() => {
-          this.screenToClose.set(false);
-          this.screenMsgSuccess = false;
-        }, vars.timeScreenSuccessVanish);
-      })
-    ).subscribe();
-  }
-  ////////// FIN : A METTRE DANS UN SERVICE !! ///////////
 
 
   // PEUT ETRE VIRER UNE DES 2 FONCTIONS CI-DESSOUS CAR PAS UTILE
