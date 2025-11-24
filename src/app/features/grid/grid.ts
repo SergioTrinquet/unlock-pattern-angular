@@ -69,7 +69,7 @@ export class GridComponent implements OnDestroy {
   protected flipOver = this.sequenceSchemaValidService.cardFlipOver;
   protected growAfterFlipOver = this.sequenceSchemaValidService.growCardAfterFlipOver;
   protected screenMsgSuccess = this.sequenceSchemaValidService.screenMsgSuccess;
-  protected screenToClose = this.sequenceSchemaValidService.screenToClose;
+  protected screenToAnimUp = this.sequenceSchemaValidService.screenToAnimUp;
 
   @Input() selectedValue!: number | null;
   private flagCallResizeObservation = false;

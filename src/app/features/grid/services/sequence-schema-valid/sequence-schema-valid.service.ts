@@ -21,8 +21,8 @@ export class SequenceSchemaValidService {
   private _screenMsgSuccess = signal<boolean>(false);
   readonly screenMsgSuccess = this._screenMsgSuccess.asReadonly();
 
-  screenToClose = signal<boolean>(false);
-
+  private _screenToAnimUp = signal<boolean>(false);
+  readonly screenToAnimUp = this._screenToAnimUp.asReadonly();
 
   public registerSvgDirective(svgDirective: SvgAnimationDirective): void {
     this.svg = svgDirective;
@@ -54,14 +54,16 @@ export class SequenceSchemaValidService {
         this.setSignal(this._growCardAfterFlipOver, false);
       }),
       delay(stepDelayBeforeMsgSuccessClose),
-      tap(() => {
-        this.setSignal(this.screenToClose, true);
-        setTimeout(() => {
-          this.setSignal(this.screenToClose, false);
-          this.setSignal(this._screenMsgSuccess, false);
-        }, vars.timeScreenSuccessVanish);
-      })
+      tap(() => this.screenDisappearance())
     ).subscribe();
+  }
+
+  public screenDisappearance(): void {
+    this.setSignal(this._screenToAnimUp, true);
+    setTimeout(() => {
+      this.setSignal(this._screenToAnimUp, false);
+      this.setSignal(this._screenMsgSuccess, false);
+    }, vars.timeScreenSuccessVanish);
   }
 }
   
