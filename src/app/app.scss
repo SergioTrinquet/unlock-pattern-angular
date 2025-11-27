@@ -21,19 +21,53 @@
 
     &:before {
         content: "Schéma de verrouillage";
-        position: absolute;
         font-size: clamp(1rem, 4vmin, 1.5rem);
-        color: var(--color-font);
         translate: 0 -2em;
+    }
+    &:after {
+        /* Material Symbols - lock */
+        font-family: 'Material Symbols Outlined';
+        font-variation-settings:
+            'FILL' 0,
+            'wght' 300,
+            'GRAD' 0,
+            'opsz' 24;
+        content: "\e897"; 
+        font-size: clamp(1rem, 4vmin, 1.6rem);
+        translate: 0 -3.6em;
+
+        display: grid;
+        place-items: center;
+        width: 6vw;
+        width: clamp(2.3rem, 9vmin, 4rem);
+        font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+        translate: 0 -4.7em;
+        background-color: var(--color-font);
+        border-radius: 1000px;
+        aspect-ratio: 1;
+        color: var(--background-screen-from) !important;
+    }
+    &:before,
+    &:after {
+        position: absolute;
+        color: var(--color-font);
         transition: opacity var(--transition-time-in-ms) ease;
     }
 
-    &:has(~ app-grid .grid-points):before {
-        opacity: 0;
+     &:has(~ app-grid .grid-points) {
+        &:before,
+        &:after {
+            opacity: 0;
+        }
     }
-    &:has(~ app-grid .grid-points:empty):before {
-        opacity: 1;
+    &:has(~ app-grid .grid-points:empty) {
+        &:before,
+        &:after {
+            opacity: 1;
+        }
     }
+
+
     &:has(~ app-grid .grid-points:empty) .msg {
         opacity: 0;
         transform: translateY(50px);

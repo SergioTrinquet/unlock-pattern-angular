@@ -14,8 +14,8 @@
     backdrop-filter: blur(100px);
     box-shadow: 0 0 var(--msg-success-height-shadow) rgb(33 33 33 / 70%);
     opacity: 0;
-    color: #fff;
-    font-size: 5rem;
+    color: var(--color-font);
+    font-size: clamp(2rem, 4vw, 3.5rem);
 
     @supports not (transition-behavior: allow-discrete) {
         animation: msgSuccessFadeIn 1s ease-in-out forwards;
@@ -33,6 +33,23 @@
         place-self: center;
         text-align: center;
         margin-inline: 5vw;
+        display: grid;
+        &::after {
+            /* Material Symbols - unlock */
+            font-family: 'Material Symbols Outlined';
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 200,
+                'GRAD' 0,
+                'opsz' 24;
+            content: "\e898";
+            // content: "\f656";
+            position: absolute;
+            place-self: center;
+            font-size: clamp(3.2rem, 8vw, 5rem);
+            margin: -2em 0 0 0;
+            color: inherit;
+        }
     }
     &.up {
         translate: 0 calc(-100dvh - var(--msg-success-height-shadow));
