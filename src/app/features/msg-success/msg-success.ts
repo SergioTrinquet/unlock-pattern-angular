@@ -1,6 +1,6 @@
-import { Component, ElementRef, inject, input, OnInit } from '@angular/core';
-import JSConfetti from 'js-confetti';
+import { AfterViewInit, Component, ElementRef, inject, input, OnInit } from '@angular/core';
 import { SequenceSchemaValidService } from '../grid/services';
+import JSConfetti from 'js-confetti';
 
 @Component({
   selector: 'app-msg-success',
@@ -9,25 +9,23 @@ import { SequenceSchemaValidService } from '../grid/services';
   templateUrl: './msg-success.html',
   styleUrl: './msg-success.scss'
 })
-export class MsgSuccessComponent implements OnInit {
+export class MsgSuccessComponent implements OnInit, AfterViewInit {
   private sequenceSchemaValidService = inject(SequenceSchemaValidService);
+  private jsConfetti!: JSConfetti;
   readonly screenSuccessToAnimUp = input<boolean>(false);
 
-  onClickScreenMsgSuccess() {
+  constructor(private el: ElementRef) {}
+
+  protected onClickScreenMsgSuccess(): void {
     this.sequenceSchemaValidService.screenDisappearance();
   }
 
-
-  ////// TEST AJOUT CONFETTIS /////
-  constructor(private el: ElementRef) {}
-  private jsConfetti!: JSConfetti;
   ngOnInit() {
     // On attache JSConfetti sur le composant, pas sur tout le document
     this.jsConfetti = new JSConfetti({ canvas: this.getLocalCanvas() });
   }
 
   private getLocalCanvas(): HTMLCanvasElement {
-    // On crée le canvas dans le DOM du composant
     const canvas = document.createElement('canvas');
     canvas.style.position = 'absolute';
     canvas.style.inset = '0';
@@ -36,24 +34,22 @@ export class MsgSuccessComponent implements OnInit {
     canvas.style.height = '100%';
     canvas.style.pointerEvents = 'none'; // pour laisser cliquer au travers
 
-    // On l'insère dans le composant
     this.el.nativeElement.appendChild(canvas);
 
     return canvas;
   }
 
   ngAfterViewInit(): void {
-    this.launchConfetti();
+    setTimeout(() => this.launchConfetti(), 1000)
   }
 
-  protected launchConfetti(): void {
+  private launchConfetti(): void {
     this.jsConfetti.addConfetti({
       confettiColors: [
-        '#ff0a54', '#ff477e', '#ff7096', '#ff85a1', '#fbb1bd', '#f9bec7',
+        '#ff0a54', '#ffdd47ff', '#0198b3ff', '#2ac204ff', '#e602e6ff', '#ff8a04ff',
       ], 
       confettiNumber: 200,
     });
   }
-  ////// TEST AJOUT CONFETTIS /////
 
 }
