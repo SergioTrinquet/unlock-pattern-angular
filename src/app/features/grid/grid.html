@@ -1,9 +1,9 @@
-<div style="position: absolute; z-index: 100;">
+<!-- <div style="position: absolute; z-index: 100;">
     <span style=" color: pink;">{{ "isPointerMoveActive : " + isPointerMoveActive }}</span>
     <span style="color: rgb(138, 255, 168); margin-left:30px;">capturedDots: {{ capturedDots() }}, length: [{{ capturedDots().length }}]</span>
     <button style="margin-left:30px; background-color: gray; padding: 0.3rem 0.5rem;" (click)="stopSequenceAnimation()">Stop sequence$</button>
     <span style=" color: white;">{{ "flipOver : " + flipOver() }}</span>
-</div>
+</div> -->
 <div class="flip-card" [class.flip-over]="flipOver()">
     <div class="flip-card-inner">
         <div #container
