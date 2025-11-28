@@ -1,19 +1,17 @@
 
 <div class="wrapper-above-grid">
   <app-select #appSelect (valueChange)="onSelectValueChange($event)"></app-select>
-  <!-- @defer (when this.selectedValue) { --> <!-- ? --> 
-   @defer (on interaction(appSelect)) {
-  <app-message></app-message>
-  <app-delete-schema></app-delete-schema>
+  @defer (on interaction(appSelect)) {
+    <app-message></app-message>
+    <app-delete-schema></app-delete-schema>
   }
 </div>
 
-<!-- @defer (when selectedValue) { --> <!-- ? --> 
 @defer (on interaction(appSelect)) {
-<app-grid [selectedValue]="selectedValue"></app-grid>
+  <app-grid [selectedValue]="selectedValue"></app-grid>
 }
 
 @defer {
-<app-background></app-background>
+  <app-background></app-background>
 }
 <router-outlet />
