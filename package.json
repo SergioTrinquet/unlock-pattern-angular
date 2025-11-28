@@ -1,6 +1,6 @@
 {
   "name": "unlock-pattern",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "prestart": "npm run generate:scss-vars",
