@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "buildCommand": "ng build --configuration production",
+  "outputDirectory": "dist/unlock-pattern",
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
