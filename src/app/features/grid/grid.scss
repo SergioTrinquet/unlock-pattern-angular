@@ -50,8 +50,9 @@ object[svgAnimation] {
     position: absolute;
     width: 100%;
     height: 100%;
-    -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
+  -webkit-backface-visibility: hidden; /* pour Chrome/Safari */
+  -moz-backface-visibility: hidden;    /* pour Firefox */
 }
 
 .flip-card-back {
@@ -109,6 +110,7 @@ object[svgAnimation] {
     display: grid;
     grid-template-columns: repeat(var(--nb-points-par-lgn-col), 1fr);
 
+    aspect-ratio: 1 / 1;
     /* width: var(--side-grid);  */ /* Avec, on n'a plus l'anim qd selection ds liste déroulante */
     height: var(--side-grid); 
     border-radius: var(--border-radius);
