@@ -1,7 +1,7 @@
 {
   "version": 2,
   "buildCommand": "ng build --configuration production",
-  "outputDirectory": "dist/unlock-pattern",
+  "outputDirectory": "dist/unlock-pattern/browser",
   "routes": [
     { "src": "/(.*)", "dest": "/index.html" }
   ]
