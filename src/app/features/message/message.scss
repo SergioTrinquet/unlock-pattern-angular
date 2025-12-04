@@ -2,7 +2,7 @@
     display: contents;
 }
 .msg {
-    --font-props: clamp(1rem, 4vmin, 1.5rem);
+    --font-props: clamp(1.2rem, 5vmin, 1.5rem);
     font-size: var(--font-props);
     line-height: var(--font-props);
     color: var(--color-font);

@@ -21,7 +21,7 @@
 
     &:before {
         content: "Schéma de verrouillage";
-        font-size: clamp(1rem, 4vmin, 1.5rem);
+        font-size: clamp(1.3rem, 5vmin, 1.5rem);
         translate: 0 -2em;
     }
     &:after {
@@ -33,13 +33,13 @@
             'GRAD' 0,
             'opsz' 24;
         content: "\e897"; 
-        font-size: clamp(1rem, 4vmin, 1.6rem);
+        font-size: clamp(1.3rem, 5vmin, 1.6rem);
         translate: 0 -3.6em;
 
         display: grid;
         place-items: center;
         width: 6vw;
-        width: clamp(2.3rem, 9vmin, 4rem);
+        width: clamp(3rem, 11vmin, 4rem);
         font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
         translate: 0 -4.7em;
         background-color: var(--color-font);
@@ -74,7 +74,7 @@
         transition-delay: 0s;
     }
 
-    --message-top-position: max(6dvh, 40px);
+    --message-top-position: max(7dvh, 40px);
 }
 @keyframes fadeInFromBottom {
     0% {
