@@ -12,7 +12,26 @@ export class ResizeObserverService {
   
   private observer?: ResizeObserver;
 
-  resizeObservation(el: HTMLElement): void {    
+  readonly dotsCoord = computed(() => {
+    if(this._canvas().height > 0) {
+      const dotsArray = this._dotsElements();
+      const DotDistanceCenter = dotsArray[0].getBoundingClientRect().width / 2;
+      let dotsCoord: Dot[] = [];
+      dotsArray.forEach((dot) => {
+          const boundingDot = dot.getBoundingClientRect();
+          dotsCoord.push({
+              "top": boundingDot.top - (this._canvas().top ?? 0) + DotDistanceCenter,
+              "left": boundingDot.left - (this._canvas().left ?? 0) + DotDistanceCenter
+          });
+      }) 
+          
+      console.log("%c---getCanvasSizeAndDotsCoord()----", "background-color: orange; color: black", dotsCoord); // TEST
+      return dotsCoord;
+    } else {
+      return [];}
+  })
+
+  public resizeObservation(el: HTMLElement): void {    
     // on détruit un ancien observer si déjà existant
     this.disconnect();
 
@@ -30,36 +49,13 @@ export class ResizeObserverService {
     this.observer.observe(el);
   }
 
-  disconnect(): void {
+  public disconnect(): void {
     this.observer?.disconnect();
     this.observer = undefined;
   }
 
-
-  //////// TEST /////////
-  // Méthode appelée depuis le composant pour donner les éléments des points
-  setDotsElements(elements: HTMLElement[]): void {
+  public setDotsElements(elements: HTMLElement[]): void {
     this._dotsElements.set(elements);
   }
-
-  readonly dotsCoord = computed(() => {
-    if(this._canvas().height > 0) {
-      const dotsArray = this._dotsElements();
-      const DotDistanceCenter = dotsArray[0].getBoundingClientRect().width / 2;
-      let dotsCoord: Dot[] = [];
-      dotsArray.forEach((dot) => {
-          const boundingDot = dot.getBoundingClientRect();
-          dotsCoord.push({
-              "top": boundingDot.top - (this._canvas().top ?? 0) + DotDistanceCenter,
-              "left": boundingDot.left - (this._canvas().left ?? 0) + DotDistanceCenter
-          });
-      }) 
-          
-      console.log("%c---getCanvasSizeAndDotsCoord()----", "background-color: orange; color: black", dotsCoord);
-      return dotsCoord;
-    } else {
-      return [];}
-  })
-  ///////////////////////
 
 }
