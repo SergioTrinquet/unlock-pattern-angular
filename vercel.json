@@ -3,6 +3,13 @@
   "buildCommand": "ng build --configuration production",
   "outputDirectory": "dist/unlock-pattern/browser",
   "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|svg|gif|ico|webp|woff|woff2|ttf|eot|json))",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 }
