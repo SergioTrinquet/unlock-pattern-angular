@@ -1,33 +1,34 @@
-import { computed, inject, Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { COOKIE_NAME_PREFIX } from '../../../app.constants';
-import { SelectStateService } from '../../../features/select/services/select-state/select-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CookieService {
-  private injector = inject(Injector);
-  private get selectState(): SelectStateService {
-    return this.injector.get(SelectStateService);
+  public hasCookieFor(gridSize: number | null): boolean {
+    if(!gridSize || !document.cookie) return false;
+
+    const cookieName = `${COOKIE_NAME_PREFIX}${gridSize}`;
+    const cookieEntry = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith(`${cookieName}=`));
+
+    if(!cookieEntry) return false;
+
+    try {
+      const jsonValue = cookieEntry.split("=")[1];
+      const data = JSON.parse(jsonValue);
+      return data.gridSize === gridSize;
+    } catch (error) {
+      console.error("Erreur lors du parsing de la valeur du cookie", error);
+      return false;
+    }
   }
 
-  // private selectState = inject(SelectStateService);
-
-  readonly isCookiePresent = computed(() => {
-    if(!document.cookie) {
-        return !!document.cookie;
-    } else {
-        let data = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith(`${COOKIE_NAME_PREFIX}${this.selectState.selectedValueNbDots()}=`))
-            ?.split("=")[1];
-        return !!data ? (JSON.parse(data).gridSize == this.selectState.selectedValueNbDots()) : !!data;
-    }
-  });
-
-  readonly deleteCookie = computed(() => {
-    document.cookie = `${COOKIE_NAME_PREFIX}${this.selectState.selectedValueNbDots()}=;max-age=0; path=/`;
-  });
+  public deleteCookie(gridSize: number | null): void {
+    const cookieName = `${COOKIE_NAME_PREFIX}${gridSize}`;
+    document.cookie = `${cookieName}=;max-age=0; path=/`;
+  }
 
   public setCookie(gridSize: number, combination: number[]): void {  
     const data = { gridSize, combination };

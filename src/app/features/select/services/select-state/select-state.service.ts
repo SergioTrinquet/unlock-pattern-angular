@@ -27,6 +27,7 @@ export class SelectStateService {
   }
 
   public setRecordedSchema(): void {
-    this._recordedSchema.set(this.cookieService.isCookiePresent());
+    const presenceCookie = this.cookieService.hasCookieFor(this._selectedValueNbDots());
+    this._recordedSchema.set(presenceCookie);
   }
 }

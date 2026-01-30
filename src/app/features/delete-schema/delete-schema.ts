@@ -29,7 +29,7 @@ export class DeleteSchemaComponent {
   protected display = false;
 
   protected deleteRecordSchema(): void {
-    this.cookieService.deleteCookie();
+    this.cookieService.deleteCookie(this.selectState.selectedValueNbDots());
     this.displayLink(false);
     this.selectControlService.resetSelectToDefault();
   }
