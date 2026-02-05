@@ -1,3 +1,8 @@
+:host {
+    display: flex;
+    justify-content: center;
+}
+
 button {
     font-size: clamp(1rem, 2.1dvmin, 1.5rem);
     background-color: var(--background-container);
