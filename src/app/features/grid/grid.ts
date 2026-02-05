@@ -73,6 +73,7 @@ export class GridComponent implements OnDestroy {
 
   @Input() selectedValue!: number | null;
   private flagCallResizeObservation = false;
+  private root: HTMLElement = document.documentElement;
   private resizeTimeout: ReturnType<typeof setTimeout> = 0;
 
   private abortFlashSchema$ = new Subject<void>(); // TEST: Voir si on ne peut-on pas utiliser 'abortAnimationService.stopSequence()' à la place !!
@@ -327,7 +328,7 @@ export class GridComponent implements OnDestroy {
       this.resizeObserverService.setDotsElements(this.dotsRef.map(p => p.nativeElement));
       this.noEventsAvailableOnGrid = false;
       if(!this.flagCallResizeObservation) {
-        setTimeout(() => this.resizeObserverService.resizeObservation(this.containerRef.nativeElement), 50); // setTimeout pour laisser le temps au DOM de se mettre à jour
+        setTimeout(() => this.resizeObserverService.resizeObservation(this.containerRef.nativeElement, this.root), 50); // setTimeout pour laisser le temps au DOM de se mettre à jour
         this.flagCallResizeObservation = true;
       }
       

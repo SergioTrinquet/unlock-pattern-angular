@@ -31,22 +31,25 @@ export class ResizeObserverService {
       return [];}
   })
 
-  public resizeObservation(el: HTMLElement): void {    
+ public resizeObservation(container: HTMLElement, viewport: HTMLElement): void {    
     // on détruit un ancien observer si déjà existant
     this.disconnect();
 
+    if (!container) return;
+
     this.observer = new ResizeObserver(entries => {
       for (const entry of entries) {
+        const rect = container.getBoundingClientRect();   console.log("%ccontainer ResizeObserver:", "background-color: purple;color: yellow;", rect);
         this._canvas.set({ 
-          width: entry.contentRect.width, 
-          height: entry.contentRect.height, 
-          top: entry.target.getBoundingClientRect().top, 
-          left: entry.target.getBoundingClientRect().left 
+          width: rect.width, 
+          height: rect.height, 
+          top: rect.top, 
+          left: rect.left 
         });
       }
     });
 
-    this.observer.observe(el);
+    this.observer.observe(viewport);
   }
 
   public disconnect(): void {

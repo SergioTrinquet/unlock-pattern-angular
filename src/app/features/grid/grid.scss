@@ -4,6 +4,7 @@ object[svgAnimation] {
 .flip-card {
     width: max(70dvmin, 400px);
     height: max(70dvmin, 400px);
+    scale: 1;
     perspective: 1000px; /* for 3D effect */
     z-index: 2; /* Pour anim qd card retourné zoome : Doit passer au dessus des éléments en haut de page */
 
@@ -17,6 +18,7 @@ object[svgAnimation] {
         overflow: hidden;
         opacity: 0;
         height: 0;
+        scale: 0;
         padding: 0;
         margin: 0;
 
@@ -24,7 +26,11 @@ object[svgAnimation] {
             display: none;
         }
     }
-    transition: height var(--transition-time-in-ms) ease, 
+    /* transition: height var(--transition-time-in-ms) ease, 
+            margin var(--transition-time-in-ms) ease,
+            padding var(--transition-time-in-ms) ease, 
+            opacity var(--transition-time-in-ms) ease; */ //PROVOQUE UN PROBLEME QD REDIMENTIONNEMENT VIEWPORT : COORDONNEES POINTS NE SONT PLUS BONNES A CAUSE DU DELAY
+    transition: scale var(--transition-time-in-ms) ease,
             margin var(--transition-time-in-ms) ease,
             padding var(--transition-time-in-ms) ease, 
             opacity var(--transition-time-in-ms) ease;
