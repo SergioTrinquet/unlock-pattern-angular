@@ -6,14 +6,19 @@
     --squares-opacity: 0.15;
     --nb-range: 4;
     --time-animation-range-square-regular: 28;
-    --time-animation-range-square-in-sec-regular: calc(var(--time-animation-range-square-regular) * 1s); // ICI, PEUT ETRE FAIRE UN MIXIN OU UNE FUNCTION
+    --time-animation-range-square-in-sec-regular: calc(var(--time-animation-range-square-regular) * 1s);
     --time-animation-range-square-slow: 43;
-    --time-animation-range-square-in-sec-slow: calc(var(--time-animation-range-square-slow) * 1s);  // ICI, PEUT ETRE FAIRE UN MIXIN OU UNE FUNCTION
+    --time-animation-range-square-in-sec-slow: calc(var(--time-animation-range-square-slow) * 1s);
     --time-animation-range-square-hidden: 1.5;
-    --time-animation-range-square-in-sec-hidden: calc(var(--time-animation-range-square-hidden) * 1s);  // ICI, PEUT ETRE FAIRE UN MIXIN OU UNE FUNCTION
+    --time-animation-range-square-in-sec-hidden: calc(var(--time-animation-range-square-hidden) * 1s);
     --space-between-squares: 5vmax;
 
     display: contents;
+
+    --scroll-offset-down: 50%;
+    --scroll-offset-up: calc(var(--scroll-offset-down) * -1);
+    --hidden-scroll-offset-down: 300vmax;
+    --hidden-scroll-offset-up: calc(var(--hidden-scroll-offset-down) * -1);
 }
 .squares-wrapper {
     position: fixed;
@@ -75,23 +80,18 @@
         aspect-ratio: 1;
         box-shadow: -5px 5px 10px #000;
         background: linear-gradient(45deg, color-mix(in srgb, var(--background-screen-from) 85%, white), color-mix(in srgb, var(--background-screen-from) 55%, white));
-
-        /* Juste pour Phase de dev. */
-        font-weight: bold;
-        font-size: 50px;
-        color: yellow;
     }
 }
 
 // PEUT-ETRE ICI FAIRE DES MIXIN OU FUNCTION
 @keyframes scroll-up  {
     100% {
-        transform: translate(0, -50%);
+        transform: translate(0, var(--scroll-offset-up));
     }
 }
 @keyframes scroll-down  {
     100% {
-        transform: translate(0, 50%);
+        transform: translate(0, var(--scroll-offset-down));
     }
 }
 @keyframes hidden-scroll-up  {
@@ -99,7 +99,7 @@
         opacity: 1;
     }
     100% {
-        transform: translate(0, -300vmax);
+        transform: translate(0, var(--hidden-scroll-offset-up));
         opacity: 0;
     }
 }
@@ -108,10 +108,42 @@
         opacity: 1;
     }
     100% {
-        transform: translate(0, 300vmax);
+        transform: translate(0, var(--hidden-scroll-offset-down));
         opacity: 0;
     }
 }
+// Define reusable variables for animation values
+// $scroll-distance: 300vmax;
+// $scroll-offset: 50%;
+// // Enhanced mixin to handle all scroll animations
+// @mixin scroll-animation($direction) {
+//     @keyframes scroll-#{$direction} {
+//         100% {
+//             @if $direction == 'up' {
+//                 transform: translate(0, #{-$scroll-offset});
+//             } @else {
+//                 transform: translate(0, #{$scroll-offset});
+//             }
+//         }
+//     }
+    
+//     @keyframes hidden-scroll-#{$direction} {
+//         10% {
+//             opacity: 1;
+//         }
+//         100% {
+//             @if $direction == 'up' {
+//                 transform: translate(0, #{-$scroll-distance});
+//             } @else {
+//                 transform: translate(0, #{$scroll-distance});
+//             }
+//             opacity: 0;
+//         }
+//     }
+// }
+// @include scroll-animation(up);
+// @include scroll-animation(down);
+
 @keyframes fadeIn {
     0% {
         opacity: 0;
