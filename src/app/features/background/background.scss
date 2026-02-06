@@ -112,38 +112,6 @@
         opacity: 0;
     }
 }
-// Define reusable variables for animation values
-// $scroll-distance: 300vmax;
-// $scroll-offset: 50%;
-// // Enhanced mixin to handle all scroll animations
-// @mixin scroll-animation($direction) {
-//     @keyframes scroll-#{$direction} {
-//         100% {
-//             @if $direction == 'up' {
-//                 transform: translate(0, #{-$scroll-offset});
-//             } @else {
-//                 transform: translate(0, #{$scroll-offset});
-//             }
-//         }
-//     }
-    
-//     @keyframes hidden-scroll-#{$direction} {
-//         10% {
-//             opacity: 1;
-//         }
-//         100% {
-//             @if $direction == 'up' {
-//                 transform: translate(0, #{-$scroll-distance});
-//             } @else {
-//                 transform: translate(0, #{$scroll-distance});
-//             }
-//             opacity: 0;
-//         }
-//     }
-// }
-// @include scroll-animation(up);
-// @include scroll-animation(down);
-
 @keyframes fadeIn {
     0% {
         opacity: 0;
