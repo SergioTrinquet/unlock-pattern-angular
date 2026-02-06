@@ -24,7 +24,7 @@ export class DrawingService {
     ctx.clearRect(0, 0, this.canvas().width, this.canvas().height);
   }
 
-  public draw(ctx: CanvasRenderingContext2D, coordStrokes: Stroke[], currentColor: string): void { /* 'currentColor' utile ? Parce que qd tracé, est tjs blanc! */
+  public draw(ctx: CanvasRenderingContext2D, coordStrokes: Stroke[], currentColor: string): void {
     // Boucle sur nb de traits
     for(const stroke of coordStrokes) {
       if(stroke.end.x && stroke.end.y) {
