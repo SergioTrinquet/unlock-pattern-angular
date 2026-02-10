@@ -4,13 +4,13 @@ import { SelectStateService } from '../select/services/select-state/select-state
 import { UtilsService } from '../../shared/services/utils/utils.service';
 import { Stroke, StrokeColor, StrokeColorationSequence } from './types/grid.type';
 import { TouchScreenService } from '../../shared/services/touch-screen/touch-screen.service';
-import { STROKE } from '../../app.constants';
 import { MessageService } from '../message/services/message.service';
-import { AnimationService, DrawingService, GridStateService, ResizeObserverService, SchemaValidityService, SequenceSchemaValidService } from './services';
-import { AbortAnimationService } from '../../shared/services/abort-animation/abort-animation.service';
+import { AnimationBackgroundGridService, DrawingService, GridStateService, ResizeObserverService, SchemaValidityService, SequenceSchemaValidService } from './services';
+import { AbortStrokesAnimationService } from '../../shared/services/abort-strokes-animation/abort-strokes-animation.service';
 import { ResetSchemaService } from '../validation-schema/services/reset-schema/reset-schema.service';
 import { SCHEMA_ELEMENTS_COLOR_CLASS, STROKES_COLORATION_SEQUENCE } from './constants/grid.constants';
-import { concatMap, delay, finalize, from, Observable, of, Subject, takeUntil } from 'rxjs';
+import { STROKE } from '../../app.constants';
+import { concatMap, delay, finalize, from, Observable, of, takeUntil } from 'rxjs';
 import { SvgAnimationDirective } from './directives/svg-animation.directive';
 import { MsgSuccessComponent } from '../msg-success/msg-success';
 import vars from '../../../styles/variables.json';
@@ -24,7 +24,7 @@ import vars from '../../../styles/variables.json';
 })
 export class GridComponent implements OnDestroy {
   private utils = inject(UtilsService);
-  private animationService = inject(AnimationService);
+  private animationBackgroundGridService = inject(AnimationBackgroundGridService);
   private gridState = inject(GridStateService);
   private selectState = inject(SelectStateService);
   private touchScreenService = inject(TouchScreenService);
@@ -32,87 +32,74 @@ export class GridComponent implements OnDestroy {
   private schemaValidityService = inject(SchemaValidityService);
   private drawing = inject(DrawingService);
   private messageService = inject(MessageService);
-  protected abortAnimationService = inject(AbortAnimationService);
   private resetSchemaService = inject(ResetSchemaService);
   private sequenceSchemaValidService = inject(SequenceSchemaValidService);
+  protected abortStrokesAnimationService = inject(AbortStrokesAnimationService);
 
-  // private dotsCoord = this.gridState.dotsCoord;
-  private dotsCoord = this.resizeObserverService.dotsCoord; // BONNE VERSION
-
-  protected capturedDots = this.gridState.capturedDots;
+  private dotsCoord = this.resizeObserverService.dotsCoord;
   private capturedDotsLength = this.gridState.capturedDotsLength;
   protected canvas = this.resizeObserverService.canvas;
+  protected capturedDots = this.gridState.capturedDots;
   protected isTouchScreen = this.touchScreenService.isTouchDevice;
   protected releasePointerCaptureOnTouchScreen = this.touchScreenService.releasePointerCaptureOnTouchScreen;
-  protected gridAnimationClass = this.animationService.animateGrid;
-  protected containerAnimationVibrateClass = this.animationService.animateContainerVibration;
-  protected containerAnimationShrinkClass = this.animationService.animateContainerShrink;
+  protected gridAnimationClass = this.animationBackgroundGridService.animateGrid;
+  protected containerAnimationVibrateClass = this.animationBackgroundGridService.animateContainerVibration;
+  protected containerAnimationShrinkClass = this.animationBackgroundGridService.animateContainerShrink;
+  protected flipOver = this.sequenceSchemaValidService.cardFlipOver;
+  protected growAfterFlipOver = this.sequenceSchemaValidService.growCardAfterFlipOver;
+  protected screenMsgSuccess = this.sequenceSchemaValidService.screenMsgSuccess;
+  protected screenToAnimUp = this.sequenceSchemaValidService.screenToAnimUp;
 
   readonly nbDots: Signal<number[]> = computed(() => {
     const nb = this.selectState.selectedValueNbDots() ?? 0;
     return Array.from({ length: nb }, (_, i) => i + 1);
   });
 
-  protected noEventsAvailableOnGrid = true;
+  @ViewChild('container') containerRef!: ElementRef;
+  @ViewChild('canvasTag') canvasRef!: ElementRef;
+  @ViewChildren('dot') dotsRef!: QueryList<ElementRef<HTMLElement>>;
+  @ViewChild(SvgAnimationDirective) svgAnimationDirective!: SvgAnimationDirective;
 
+  @Input() selectedValue!: number | null;
+
+  private root: HTMLElement = document.documentElement;
   private coordStrokes: Stroke[] = [];
   private ctx:CanvasRenderingContext2D | null = null;
   private strokeCurrentColor = STROKE.color[SCHEMA_ELEMENTS_COLOR_CLASS.default];
   protected isPointerMoveActive = false;
+  protected noEventsAvailableOnGrid = true;
   protected dotColorClass: StrokeColor | "" = "";
-
-  @ViewChild('container') containerRef!: ElementRef;
-  @ViewChild('canvasTag') canvasRef!: ElementRef;
-  @ViewChildren('dot') dotsRef!: QueryList<ElementRef<HTMLElement>>;
-
-  @ViewChild(SvgAnimationDirective) svgAnimationDirective!: SvgAnimationDirective;
-  protected flipOver = this.sequenceSchemaValidService.cardFlipOver;
-  protected growAfterFlipOver = this.sequenceSchemaValidService.growCardAfterFlipOver;
-  protected screenMsgSuccess = this.sequenceSchemaValidService.screenMsgSuccess;
-  protected screenToAnimUp = this.sequenceSchemaValidService.screenToAnimUp;
-
-  @Input() selectedValue!: number | null;
   private flagCallResizeObservation = false;
-  private root: HTMLElement = document.documentElement;
   private resizeTimeout: ReturnType<typeof setTimeout> = 0;
 
-  private abortFlashSchema$ = new Subject<void>(); // TEST: Voir si on ne peut-on pas utiliser 'abortAnimationService.stopSequence()' à la place !!
-
   constructor() {
-    // Partie avant dans fonction 'HandleDotHover()'
-    effect(() => { console.log("Effect() pour stopper le dessin du schéma");
+    // Pour stopper tracé du schéma si besoin qd nb de points survolés max.
+    effect(() => {
       if(!this.selectState.recordedSchema()) {
         if(this.capturedDotsLength() === this.selectState.currentSchemaNbDotsMinMax()?.nbDotMax) this.stopDrawingSchema();
       } else {
         if(this.capturedDotsLength() === this.selectState.selectedValueNbDots()) this.stopDrawingSchema();
       }
-    //  if(!untracked(this.selectState.recordedSchema)) {
-    //     if(this.capturedDotsLength() === untracked(this.selectState.currentSchemaNbDotsMinMax)?.nbDotMax) this.stopDrawingSchema();
-    //   } else {
-    //     if(this.capturedDotsLength() === untracked(this.selectState.selectedValueNbDots)) this.stopDrawingSchema();
-    //   }
     })
 
-
-   effect(() => {
+    // Qd redimensionnement de la fenêtre, redraw tracé du schéma
+    effect(() => {
       if (this.canvas().height > 0) {
         // Custom debounce
         clearTimeout(this.resizeTimeout);
         this.resizeTimeout = setTimeout(() => {
-          // this.getDotsCoord(this.dotsRef); // Anicenne version qd dotsCoord dans GridStateService
-          this.redrawStrokesAfterResize();
+          this.redrawSchemaAfterResize();
         }, 200);
       }
     });
 
-    // Qd click sur bouton 'Refaire le schéma'
-    effect(() => {   console.log("Effect() bouton 'Refaire le schéma'", this.resetSchemaService.resetRequested());
+    // Qd click sur bouton 'Refaire un schéma'
+    effect(() => {
       if(this.resetSchemaService.resetRequested() !== null) {
         if(this.resetSchemaService.resetRequested()) {
-          this.abortFlashSchema$.next(); //
           this.colorationSchema("error")
         } else {
-          this.removeSchemaDrawing();
+          this.resetSchema();
           queueMicrotask(() => this.resetSchemaService.triggerResetSchema(null));
         }
       }
@@ -129,61 +116,15 @@ export class GridComponent implements OnDestroy {
       const prev = changes['selectedValue'].previousValue;
       const curr = changes['selectedValue'].currentValue;
       if(curr !== prev && !!prev) { // Qd ni 1er chargement de page, ni qd précédente value correspond à value select par defaut et que value selected est différente de la précédente value
-        // console.log("Appel resetGrid()"); 
         this.resetGrid();   
       }
       if(curr) {
-        // console.log("Appel initGrid()"); 
         this.initGrid();
       }
     }
   }
 
-  redrawStrokesAfterResize(): void {  
-    this.coordStrokes = [];
-    const untrackedCapturedDots = untracked(this.capturedDots);
-    if(untrackedCapturedDots.length === 0) return;
-    for(let i = 0; i < untrackedCapturedDots.length; i++) {
-      if(i > 0) {
-        const previousDot = untrackedCapturedDots[i - 1];    
-        const currentDot = untrackedCapturedDots[i];
-        const segment: Stroke = {
-          // start: { x: this.dotsCoord()[previousDot].left, y: this.dotsCoord()[previousDot].top },
-          // end: { x: this.dotsCoord()[currentDot].left, y: this.dotsCoord()[currentDot].top }
-
-          start: { x: untracked(this.dotsCoord)[previousDot].left, y: untracked(this.dotsCoord)[previousDot].top },
-          end: { x: untracked(this.dotsCoord)[currentDot].left, y: untracked(this.dotsCoord)[currentDot].top }
-        }  
-        this.coordStrokes.push(segment);
-      }
-    }    
-    if(this.ctx) {
-      // Gestion du cas ou redimentionnement fenetre sans click pour arrter le tracé : On checke si tracé valide ou pas
-      //this.stopDrawingSchema();
-
-      // this.drawing.refreshCanvas(this.ctx); // ?
-      this.drawing.draw(this.ctx, this.coordStrokes, this.strokeCurrentColor);
-    }
-  }
-
-  /* getDotsCoord(dots: QueryList<ElementRef>): void { 
-    const dotsArray = dots.toArray().map(ref => ref.nativeElement);
-    const DotDistanceCenter = dotsArray[0].getBoundingClientRect().width / 2;
-    let dotsCoord: Dot[] = [];
-    dotsArray.forEach((dot) => {
-        const boundingDot = dot.getBoundingClientRect();
-        dotsCoord.push({
-            "top": boundingDot.top - (this.canvas().top ?? 0) + DotDistanceCenter,
-            "left": boundingDot.left - (this.canvas().left ?? 0) + DotDistanceCenter
-        });
-    }) 
-        
-    this.gridState.setDotsCood(dotsCoord);
-    console.log("%c---getCanvasSizeAndDotsCoord()----", "background-color: yellow; color: black", dotsCoord);
-  } */
-
-  
-  handleDotHover(idDot: number): void {
+  protected handleDotHover(idDot: number): void {
     this.touchScreenService.vibrateOnTouch(70);
 
     if(!this.capturedDots().includes(idDot)) {
@@ -204,21 +145,11 @@ export class GridComponent implements OnDestroy {
           this.coordStrokes.push(actualSegment);
           this.isPointerMoveActive = true;
       }
-      // console.log("%c>>> handleDotHover() : isPointerMoveActive", "background-color: blue; color: white", this.isPointerMoveActive);
       this.gridState.setCapturedDots([...this.capturedDots(), idDot]);
-
-
-      ////////////////////
-      /* if(!this.selectState.recordedSchema()) {
-        if(this.capturedDotsLength() === this.selectState.currentSchemaNbDotsMinMax()?.nbDotMax) this.stopDrawingSchema();
-      } else {
-        if(this.capturedDotsLength() === this.selectState.selectedValueNbDots()) this.stopDrawingSchema();
-      } */
-      ////////////////////
     }
   }
 
-  isDrawingSchema(e: MouseEvent | PointerEvent): void {
+  protected isDrawingSchema(e: MouseEvent | PointerEvent): void {
     const cursorPositionInCanvas = this.drawing.getCursorPositionOnCanvas(e);
     // Ajout cordonnées du curseur sur fin dernier segment du schema
     this.coordStrokes[this.coordStrokes.length - 1].end = { x: cursorPositionInCanvas.x, y: cursorPositionInCanvas.y };
@@ -228,9 +159,9 @@ export class GridComponent implements OnDestroy {
     }
   }
 
-  stopDrawingSchema(e?: MouseEvent | PointerEvent) {
+  protected stopDrawingSchema(e?: MouseEvent | PointerEvent) {
     if(this.capturedDotsLength()) {
-      this.isPointerMoveActive = false;   console.log("%c>>> stopDrawingSchema() : isPointerMoveActive = false", "background-color: green; color: white");
+      this.isPointerMoveActive = false;   
 
       this.coordStrokes.pop();
       if(this.ctx) {
@@ -243,19 +174,14 @@ export class GridComponent implements OnDestroy {
 
       const isSchemaValid = this.schemaValidityService.checkSchemaValidity();
       this.flashSchema(isSchemaValid)
-      ///
-      .pipe(takeUntil(this.abortFlashSchema$))
-      ///
         .subscribe({
           complete: () => {
             console.log('🎬 Animation "flashSchema" complète');
-
-            // Si phase de création de schéma + schéma tracé est valide, alors traits et coloration restent, sinon ils disparaissent
-            if(!(!this.selectState.recordedSchema() && isSchemaValid)) { // Tous les cas de figure sauf schema pas enregistré et valide !!
-              this.removeSchemaDrawing(); 
+            // Tracé disparait sauf quand schema pas encore enregistré et valide
+            if(!(!this.selectState.recordedSchema() && isSchemaValid)) {
+              this.resetSchema();
             }
             if(this.selectState.recordedSchema() && isSchemaValid) { 
-              // this.runSequenceSchemaValid();
               this.sequenceSchemaValidService.runSequenceSchemaValid();
             } 
           }
@@ -264,27 +190,21 @@ export class GridComponent implements OnDestroy {
     }
   }
 
-
-  // PEUT ETRE VIRER UNE DES 2 FONCTIONS CI-DESSOUS CAR PAS UTILE
-  removeSchemaDrawing() {  console.log("%c>>> removeSchemaDrawing()", "background-color: deeppink; color: white");
-    this.resetSchema();
-    this.noEventsAvailableOnGrid = false; // Réactivation events sur container pour dessiner
-  }
-  resetSchema() { console.log("%c>>> resetSchema()", "background-color: red; color: white");
+  private resetSchema(): void {
     if(this.ctx) this.drawing.refreshCanvas(this.ctx); // Retrait du tracé
     this.coordStrokes = []; // Réinitialisation coord.
     this.gridState.setCapturedDots([]); // Réinitialisation data points survolés
     
-    this.dotColorClass = "";
+    this.dotColorClass = ""; // Réinitialisation classe CSS de couleur des points
     this.strokeCurrentColor = STROKE.color[SCHEMA_ELEMENTS_COLOR_CLASS.default]; // Trait schéma avec couleur par défaut
 
-    //this.isPointerMoveActive = false; console.log("%c>>> resetSchema() : isPointerMoveActive = false", "background-color: green; color: white");// Cas ou dessin en cours sans click de fin, puis changement dans le select, puis retour sur la grille : Permet de réinitialiser le isPointerMoveActive
-    this.abortAnimationService.stopSequence();
+    if(this.isPointerMoveActive) this.isPointerMoveActive = false; // Cas de figure ou dessin en cours et changemt du select ou redimensionnement taille fenetre
+    this.noEventsAvailableOnGrid = false; // Réactivation events sur container pour dessiner
+    
+    this.abortStrokesAnimationService.stopSequence();
   }
-
-
   
-  flashSchema(isSchemaValid: boolean): Observable<null> {   // console.log("%cDans flashSchema()", "background-color: red; color: #fff;")
+  private flashSchema(isSchemaValid: boolean): Observable<null> {   
     const sequence: StrokeColorationSequence[] = STROKES_COLORATION_SEQUENCE.map(p => ({
       ...p, // copie les propriétés
       color: (p.color === "custom" ? (isSchemaValid ? SCHEMA_ELEMENTS_COLOR_CLASS.valid : SCHEMA_ELEMENTS_COLOR_CLASS.error) : p.color) // écrase la valeur
@@ -294,33 +214,47 @@ export class GridComponent implements OnDestroy {
       concatMap((step) => {
         this.colorationSchema(step.color);
         return of(null).pipe(delay(step.duration));
-        // ou
-        // return of(step).pipe(
-        //   tap(()=> this.colorationSchema(step.color)),
-        //   delay(step.duration))
       }),
-      takeUntil(this.abortAnimationService.getAbort()), // ✅ annule si abort$ émet avant la fin
-      // takeUntil(this.abortAnimationService.getAbort() || this.abortFlashSchema$), // ✅ annule si abort$ émet avant la fin
-      finalize(() => console.log("Animation complète !!"))
+      takeUntil(this.abortStrokesAnimationService.getAbort()), // ✅ annule si abort$ émet avant la fin
+      // finalize(() => console.log("Animation complète !!"))
     )
 
     return sequence$;
   }
 
-  colorationSchema(colorClass: StrokeColor): void {
+  private colorationSchema(colorClass: StrokeColor): void {
     this.dotColorClass = colorClass;
     this.strokeCurrentColor = STROKE.color[colorClass];
     if(this.ctx) this.drawing.draw(this.ctx, this.coordStrokes, this.strokeCurrentColor);
   }
 
-
-  // Fonction TEST pour arreter observable qui colore les traits ou tt autre animation gérée en RxJs avec un 'abort$'
-  stopSequenceAnimation(): void {
-    this.abortAnimationService.stopSequence();
+  private redrawSchemaAfterResize(): void {  
+    this.coordStrokes = [];
+    const untrackedCapturedDots = untracked(this.capturedDots);
+    if(untrackedCapturedDots.length === 0) return;
+    for(let i = 0; i < untrackedCapturedDots.length; i++) {
+      if(i > 0) {
+        const previousDot = untrackedCapturedDots[i - 1];    
+        const currentDot = untrackedCapturedDots[i];
+        const segment: Stroke = {
+          start: { x: untracked(this.dotsCoord)[previousDot].left, y: untracked(this.dotsCoord)[previousDot].top },
+          end: { x: untracked(this.dotsCoord)[currentDot].left, y: untracked(this.dotsCoord)[currentDot].top }
+        }  
+        this.coordStrokes.push(segment);
+      }
+    }    
+    if(this.ctx) {
+      // Si tracé du schéma est en cours au moment du redimensionnement de la fenetre: On supprime le schéma
+      if(this.isPointerMoveActive) {
+        this.resetSchema();
+        return;
+      }
+      this.drawing.refreshCanvas(this.ctx);
+      this.drawing.draw(this.ctx, this.coordStrokes, this.strokeCurrentColor);
+    }
   }
 
-
-  initGrid(): void {
+  private initGrid(): void {
     this.utils.setCustomProperties({'--nb-points-par-lgn-col': Math.sqrt(this.selectState.selectedValueNbDots()!)}); // Affectation var CSS pour positionnement grille de points
     
     this.noEventsAvailableOnGrid = true;
@@ -332,11 +266,11 @@ export class GridComponent implements OnDestroy {
         this.flagCallResizeObservation = true;
       }
       
-        // if(s.isTouchScreen) s.container.addEventListener('pointerdown', releasePointerCaptureOnTouchScreen);
+      // if(s.isTouchScreen) s.container.addEventListener('pointerdown', releasePointerCaptureOnTouchScreen);
     }, vars.transitionTime);
   }
 
-  resetGrid(): void {
+  private resetGrid(): void {
     this.resetSchema();
     if(this.flagCallResizeObservation){ 
       this.resizeObserverService.disconnect(); 
