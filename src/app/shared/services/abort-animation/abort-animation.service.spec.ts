@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AbortAnimationService } from './abort-animation.service';
+import { AbortStrokesAnimationService } from './abort-animation.service';
 
-describe('AbortAnimationService', () => {
-  let service: AbortAnimationService;
+describe('AbortStrokesAnimationService', () => {
+  let service: AbortStrokesAnimationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(AbortAnimationService);
+    service = TestBed.inject(AbortStrokesAnimationService);
   });
 
   it('should be created', () => {

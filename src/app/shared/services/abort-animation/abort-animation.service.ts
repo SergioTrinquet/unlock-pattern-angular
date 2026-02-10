@@ -4,12 +4,12 @@ import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AbortAnimationService {
+export class AbortStrokesAnimationService {
   private _abort$ = new Subject<void>();
   readonly abort$ = this._abort$;
 
   // Fonction pour arreter observable
-  public stopSequence(): void {  console.log("Dans 'AbortAnimationService > stopSequence()'");
+  public stopSequence(): void {  console.log("Dans 'AbortStrokesAnimationService > stopSequence()'");
     this.abort$.next();
   }
 

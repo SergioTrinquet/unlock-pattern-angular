@@ -6,7 +6,7 @@ import { of, tap, delay, takeUntil, finalize } from 'rxjs';
 import { GridStateService } from '../../grid/services';
 import { SchemaValidityService } from '../../grid/services/schema-validity/schema-validity.service';
 import { message } from '../types/message.type';
-import { AbortAnimationService } from '../../../shared/services/abort-animation/abort-animation.service';
+import { AbortStrokesAnimationService } from '../../../shared/services/abort-animation/abort-animation.service';
 import vars from '../../../../styles/variables.json';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class MessageService {
   private selectStateService = inject( SelectStateService);
   private gridStateService = inject( GridStateService);
   private schemaValidityService = inject(SchemaValidityService);
-  private abortAnimationService = inject(AbortAnimationService);
+  private abortStrokesAnimationService = inject(AbortStrokesAnimationService);
   
   private isSchemaRecorded = this.selectStateService.recordedSchema;
   private currentSchemaNbDotsMinMax = this.selectStateService.currentSchemaNbDotsMinMax;
@@ -120,7 +120,7 @@ export class MessageService {
       );
       if(pm.delay) {
         obs$ = obs$.pipe(
-          takeUntil(this.abortAnimationService.getAbort()) // ✅ annule si abort$ émet avant la fin
+          takeUntil(this.abortStrokesAnimationService.getAbort()) // ✅ annule si abort$ émet avant la fin
           // , finalize(() => {console.log("displayComplementaryInfos : opérateur 'finalize'");this.setShowButtons(false)}) // EN COURS DE TEST
         );
       }
