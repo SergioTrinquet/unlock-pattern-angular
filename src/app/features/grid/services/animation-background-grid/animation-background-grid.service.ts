@@ -7,7 +7,7 @@ import vars from '../../../../../styles/variables.json';
 @Injectable({
   providedIn: 'root'
 })
-export class AnimationService {
+export class AnimationBackgroundGridService {
   private abortStrokesAnimationService = inject(AbortStrokesAnimationService);
 
   private _animateGrid = signal(false);

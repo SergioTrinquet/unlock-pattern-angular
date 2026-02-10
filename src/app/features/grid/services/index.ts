@@ -1,4 +1,4 @@
-export * from "./animation/animation.service";
+export * from "./animation-background-grid/animation-background-grid.service";
 export * from "./drawing/drawing.service";
 export * from "./grid-state/grid-state.service";
 export * from "./resize-observer/resize-observer.service";
