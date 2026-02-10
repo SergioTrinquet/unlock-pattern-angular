@@ -1,7 +1,7 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { CssVarsKeys, CssVarsValue } from '../../types/grid.type';
 import { of, tap, delay, Observable, takeUntil, finalize } from 'rxjs';
-import { AbortStrokesAnimationService } from '../../../../shared/services/abort-animation/abort-animation.service';
+import { AbortStrokesAnimationService } from '../../../../shared/services/abort-strokes-animation/abort-strokes-animation.service';
 import vars from '../../../../../styles/variables.json';
 
 @Injectable({

@@ -6,7 +6,7 @@ import { of, tap, delay, takeUntil, finalize } from 'rxjs';
 import { GridStateService } from '../../grid/services';
 import { SchemaValidityService } from '../../grid/services/schema-validity/schema-validity.service';
 import { message } from '../types/message.type';
-import { AbortStrokesAnimationService } from '../../../shared/services/abort-animation/abort-animation.service';
+import { AbortStrokesAnimationService } from '../../../shared/services/abort-strokes-animation/abort-strokes-animation.service';
 import vars from '../../../../styles/variables.json';
 
 @Injectable({

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AbortStrokesAnimationService } from './abort-animation.service';
+import { AbortStrokesAnimationService } from './abort-strokes-animation.service';
 
 describe('AbortStrokesAnimationService', () => {
   let service: AbortStrokesAnimationService;
