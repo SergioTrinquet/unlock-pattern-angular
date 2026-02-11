@@ -9,7 +9,7 @@ export class AbortStrokesAnimationService {
   readonly abort$ = this._abort$;
 
   // Fonction pour arreter observable
-  public stopSequence(): void {  console.log("Dans 'AbortStrokesAnimationService > stopSequence()'");
+  public stopSequence(): void {
     this.abort$.next();
   }
 

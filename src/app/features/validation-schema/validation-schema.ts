@@ -21,7 +21,7 @@ export class ValidationSchema {
   private selectStateService = inject(SelectStateService);
   private selectControlService = inject(SelectControlService);
   private gridStateService = inject(GridStateService);
-  private abortStrokesAnimationService = inject(AbortStrokesAnimationService);// TEST
+  private abortStrokesAnimationService = inject(AbortStrokesAnimationService);
 
   private capturedDots = this.gridStateService.capturedDots;
 

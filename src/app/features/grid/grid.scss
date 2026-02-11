@@ -146,36 +146,18 @@ object[svgAnimation] {
         place-content: center;
         aspect-ratio: 1;
         .dot {
-            
-            // VERSION ORIGINALE avec 1dvh
-            /* --diametre-point-hover-brut: 6;
-            --diametre-point-hover: calc(var(--diametre-point-hover-brut) * 1dvh);
-            --diametre-point: calc((var(--diametre-point-hover-brut) / 2) * 1dvh);
-            @media screen and (max-width: 700px) and (pointer: fine) and (hover: hover) {
-                --diametre-point: calc(((var(--diametre-point-hover-brut) - 1) / 2) * 1dvh);
-            }
-            @media screen and (max-width: 360px) {
-                --diametre-point: calc(((var(--diametre-point-hover-brut) - 2) / 2) * 1dvh);
-            } */
-
-            //// NOUVELLE VERSION pour taille Points ////
             --one-unit: clamp(6px, 1dvh, 9.5px);
             --diametre-point: calc(var(--one-unit) * 3); // soit clamp(18px, 3dvh, 28.5px);
             --diametre-point-hover: calc(var(--one-unit) * 6); // soit clamp(36px, 6dvh, 57px);
-
             @media screen and (max-width: 700px) and (pointer: fine) and (hover: hover) {
-                // --diametre-point: 2.5;
                 --diametre-point: calc(var(--one-unit) * 2.6);
             }
             @media screen and (max-width: 360px) {
-                // --diametre-point: 2;
                 --diametre-point: calc(var(--one-unit) * 2.3);
             }
-
             @media (pointer: coarse) and (hover: none) {
-                --diametre-point-hover: calc(var(--one-unit) * 7); // soit clamp(42px, 6dvh, 66.5px);
+                --diametre-point-hover: calc(var(--one-unit) * 7);
             }
-            //// FIN NOUVELLE VERSION pour taille Points ////
 
             width: var(--diametre-point-hover);
             aspect-ratio: 1;
