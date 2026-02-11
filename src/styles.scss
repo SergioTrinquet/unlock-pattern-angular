@@ -6,7 +6,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
 
 :root {
-    /* Valeurs par défaut si pas définies dans 'constants.js' */
+    /* Valeurs par défaut si pas définies dans 'app.constants.ts' */
     --width-stroke: 6;
     --color-stroke: rgb(255, 217, 217);
     --color-stroke-error: rgb(255, 145, 145);
@@ -14,15 +14,6 @@
 
     --nb-points-par-lgn-col: 3;
     --nb-points: calc(var(--nb-points-par-lgn-col) * var(--nb-points-par-lgn-col));
-
-    --diametre-point-hover: 6;
-    --diametre-point: calc(var(--diametre-point-hover) / 2);
-    @media screen and (max-width: 700px) and (pointer: fine) and (hover: hover) {
-        --diametre-point: calc((var(--diametre-point-hover) - 1) / 2);
-    }
-    @media screen and (max-width: 360px) {
-        --diametre-point: calc((var(--diametre-point-hover) - 2) / 2);
-    }
     /* FIN Valeurs par défaut */
 
     --border-radius: 2vh;
@@ -46,13 +37,16 @@
     --time-shrink-in-ms: calc(var(--time-shrink, 400) * 1ms);
 }
 
+/* .dot { // Pour test: A VIRER !
+    background-color: rgba(255,0,0,0.4);
+}
+ */
 * { /* Reset */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 html {
-    /* min-height: 100%; */
     font-family: "Dosis", sans-serif;
     font-optical-sizing: auto;
     font-weight: 500;
@@ -76,7 +70,6 @@ html {
     }
 }
 body {
-    /* min-height: 100dvh; */
     overflow: hidden;
     background: linear-gradient(to top, var(--background-screen-from) 50%, var(--background-screen-to) 100%); /* url("https://picsum.photos/1200/800") no-repeat center center; */ /* url("../svg/low-poly-grid-haikei.svg") no-repeat center center;background-size:cover; */
 
