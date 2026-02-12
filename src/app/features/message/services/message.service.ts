@@ -23,6 +23,30 @@ export class MessageService {
   private capturedDotsLength = this.gridStateService.capturedDotsLength;
 
   private previousInfoText: string | undefined = undefined;
+  private animationMsg: number = vars.animationMsg;
+
+  private _text = signal<string>('');
+  private _customClass = signal<string>("");
+  private _animUp = signal<string>("");
+  private _showButtons = signal<boolean | undefined>(undefined);
+
+  readonly text = this._text.asReadonly();
+  readonly customClass = this._customClass.asReadonly();
+  readonly animUp = this._animUp.asReadonly();
+  readonly showButtons = this._showButtons.asReadonly();
+
+  private setText(text: string): void {
+    this._text.set(text);
+  }
+  private setCustomClass(className: string): void {
+    this._customClass.set(className);
+  }
+  private setAnimUp(className: string): void {
+    this._animUp.set(className);
+  }
+  private setShowButtons(val: boolean): void {
+    this._showButtons.set(val);
+  }
 
   public setComplementaryInfos(calledFromClick?: MouseEvent["type"] | PointerEvent["type"] | undefined): void {  
     console.log("Dans 'setComplementaryInfos > calledFromClick': ", calledFromClick); //TEST
@@ -65,32 +89,9 @@ export class MessageService {
       }
     }
   }
-
-
-
-  private animationMsg: number = vars.animationMsg;
-
-  private _text = signal<string>('');
-  private _customClass = signal<string>("");
-  private _animUp = signal<string>("");
-  private _showButtons = signal<boolean | undefined>(undefined);
-
-  readonly text = this._text.asReadonly();
-  readonly customClass = this._customClass.asReadonly();
-  readonly animUp = this._animUp.asReadonly();
-  readonly showButtons = this._showButtons.asReadonly();
-
-  private setText(text: string): void {
-    this._text.set(text);
-  }
-  private setCustomClass(className: string): void {
-    this._customClass.set(className);
-  }
-  private setAnimUp(className: string): void {
-    this._animUp.set(className);
-  }
-  private setShowButtons(val: boolean): void {
-    this._showButtons.set(val);
+  
+  public removeComplementaryInfos(): void {
+    this.displayComplementaryInfos({ text: "" });
   }
 
   private displayComplementaryInfos(pm: message): void {
@@ -129,10 +130,6 @@ export class MessageService {
         this.setShowButtons(!!pm.showButtons);
         if(pm.text || pm.text == "") this.setText(pm.text);
     }
-  }
-
-  public removeComplementaryInfos() {
-    this.displayComplementaryInfos({ text: "" });
   }
 
 }

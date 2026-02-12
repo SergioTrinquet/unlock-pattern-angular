@@ -28,10 +28,6 @@ export class SequenceSchemaValidService {
     this.svg = svgDirective;
   }
 
-  private setSignal(varSignal: WritableSignal<boolean>, val: boolean): void {
-    varSignal.set(val);
-  }
-
   public runSequenceSchemaValid(): void {
     const { stepCardFlip, stepAnimSVG, stepDisplayMsgSuccess, stepDelayBeforeMsgSuccessClose } = SEQUENCE_ANIMATION_DRAWING_SUCCESS;
     of(null).pipe(
@@ -64,6 +60,10 @@ export class SequenceSchemaValidService {
       this.setSignal(this._screenToAnimUp, false);
       this.setSignal(this._screenMsgSuccess, false);
     }, vars.timeScreenSuccessVanish);
+  }
+
+  private setSignal(varSignal: WritableSignal<boolean>, val: boolean): void {
+    varSignal.set(val);
   }
 }
   
