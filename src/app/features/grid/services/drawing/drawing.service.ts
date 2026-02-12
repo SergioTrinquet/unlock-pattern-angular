@@ -12,7 +12,7 @@ export class DrawingService {
   // Peut-être à mettre dans un service à part
   public getCursorPositionOnCanvas(e: MouseEvent | PointerEvent): CoordStrokeExtremity {
     const { clientX, clientY } = e;
-    // Return position from the origin of canvas
+    // Retourne position à partir de l'origin du canvas
     return { 
         x: clientX - (this.canvas().left || 0), 
         y: clientY - (this.canvas().top || 0)
