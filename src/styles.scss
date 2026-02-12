@@ -37,10 +37,6 @@
     --time-shrink-in-ms: calc(var(--time-shrink, 400) * 1ms);
 }
 
-/* .dot { // Pour test: A VIRER !
-    background-color: rgba(255,0,0,0.4);
-}
- */
 * { /* Reset */
     margin: 0;
     padding: 0;
@@ -53,7 +49,10 @@ html {
     font-style: normal;
     font-size: 16px;
 
-    @media screen and (orientation: landscape) and (pointer: coarse) and (hover: none) {
+    // @media screen and (orientation: landscape) and (pointer: coarse) and (hover: none) {
+    @media (any-pointer: coarse) and (any-hover: none)
+       and (orientation: landscape)
+       and (max-height: 500px) {  /* Smartphones en paysage UNIQUEMENT ('max-height: 500px' pour exclure les tablettes) */
         &:before {
             z-index: 10000;
             content: "Pour une meilleure expérience,\Aorientez votre appareil en mode portrait. \AMerci";
