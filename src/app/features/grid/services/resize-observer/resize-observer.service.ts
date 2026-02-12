@@ -7,9 +7,7 @@ import { Canvas, Dot } from '../../types/grid.type';
 export class ResizeObserverService {
   private _canvas = signal<Canvas>({  height: 0, width: 0 });
   readonly canvas = this._canvas.asReadonly();
-
   private _dotsElements = signal<HTMLElement[]>([]);
-  
   private observer?: ResizeObserver;
 
   readonly dotsCoord = computed(() => {
@@ -24,11 +22,10 @@ export class ResizeObserverService {
               "left": boundingDot.left - (this._canvas().left ?? 0) + DotDistanceCenter
           });
       }) 
-          
-      console.log("%c---getCanvasSizeAndDotsCoord()----", "background-color: orange; color: black", dotsCoord); // TEST
       return dotsCoord;
     } else {
-      return [];}
+      return [];
+    }
   })
 
  public resizeObservation(container: HTMLElement, viewport: HTMLElement): void {    
@@ -39,7 +36,8 @@ export class ResizeObserverService {
 
     this.observer = new ResizeObserver(entries => {
       for (const entry of entries) {
-        const rect = container.getBoundingClientRect();   console.log("%ccontainer ResizeObserver:", "background-color: purple;color: yellow;", rect);
+        const rect = container.getBoundingClientRect();   
+        // console.log("%ccontainer ResizeObserver:", "background-color: purple;color: yellow;", rect);
         this._canvas.set({ 
           width: rect.width, 
           height: rect.height, 
@@ -60,5 +58,4 @@ export class ResizeObserverService {
   public setDotsElements(elements: HTMLElement[]): void {
     this._dotsElements.set(elements);
   }
-
 }
