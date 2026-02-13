@@ -5,3 +5,23 @@ select {
     padding: .5rem 1rem;
     box-shadow: 0 0 20px 0px rgba(255, 255, 255, 1);
 }
+
+
+
+@media (hover: none) and (pointer: coarse) {
+/* mobile/tablette */
+    @supports (-webkit-touch-callout: none) {
+    /* UNIQUEMENT Safari / WebKit iOS */
+        select {
+            -webkit-appearance: none; /* iOS / Safari */
+            -moz-appearance: none;    /* Firefox */
+            appearance: none;
+
+            background-color: #fff;
+            border: 1px solid #ccc;
+            // padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+            font-size: 1rem; /* important pour éviter le zoom sur iOS */
+            // border-radius: 6px;
+        }
+    }
+}
