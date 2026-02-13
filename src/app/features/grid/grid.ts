@@ -34,10 +34,8 @@ export class GridComponent implements OnDestroy {
   private messageService = inject(MessageService);
   private resetSchemaService = inject(ResetSchemaService);
   private sequenceSchemaValidService = inject(SequenceSchemaValidService);
-  protected abortStrokesAnimationService = inject(AbortStrokesAnimationService);
+  private abortStrokesAnimationService = inject(AbortStrokesAnimationService);
 
-  private dotsCoord = this.resizeObserverService.dotsCoord;
-  private capturedDotsLength = this.gridState.capturedDotsLength;
   protected canvas = this.resizeObserverService.canvas;
   protected capturedDots = this.gridState.capturedDots;
   protected isTouchScreen = this.touchScreenService.isTouchDevice;
@@ -49,6 +47,9 @@ export class GridComponent implements OnDestroy {
   protected growAfterFlipOver = this.sequenceSchemaValidService.growCardAfterFlipOver;
   protected screenMsgSuccess = this.sequenceSchemaValidService.screenMsgSuccess;
   protected screenToAnimUp = this.sequenceSchemaValidService.screenToAnimUp;
+  private dotsCoord = this.resizeObserverService.dotsCoord;
+  private capturedDotsLength = this.gridState.capturedDotsLength;
+  
 
   readonly nbDots: Signal<number[]> = computed(() => {
     const nb = this.selectState.selectedValueNbDots() ?? 0;
