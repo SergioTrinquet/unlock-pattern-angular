@@ -1,18 +1,11 @@
 select {
     border: none;
-    // border-radius: var(--border-radius);
     border-radius: 1vh;
     padding: .5rem 1rem;
     box-shadow: 0 0 20px 0px rgba(255, 255, 255, 1);
-}
 
-
-
-@media (hover: none) and (pointer: coarse) {
-/* mobile/tablette */
-    @supports (-webkit-touch-callout: none) {
-    /* UNIQUEMENT Safari / WebKit iOS */
-        select {
+    @media (hover: none) and (pointer: coarse) { // mobile/tablette  
+        @supports (-webkit-touch-callout: none) { // UNIQUEMENT Safari / WebKit iOS
             -webkit-appearance: none; /* iOS / Safari */
             -moz-appearance: none;    /* Firefox */
             appearance: none;
