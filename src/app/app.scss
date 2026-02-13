@@ -3,17 +3,32 @@
     display: grid;
     align-items: center;
     justify-items: center;
-    // grid-template-rows: 1fr 0fr;
+    //// BONNE VERSION pour Android (PC et mobile) : A CONSERVER
+    /* grid-template-rows: 1fr 0fr;
     transition: grid-template-rows var(--transition-time-in-ms) ease;
 
-    // &:has(.grid-points:not(:empty)) {
-    //     grid-template-rows: 1fr 5fr;
-    // }
+    &:has(.grid-points:not(:empty)) {
+        grid-template-rows: 1fr 5fr;
+    } */
+    /// A CONSERVER
 
     /// TEST pour corrct° bug Webkit sur Grid ///
-    grid-template-rows: 100% 0%;
-    &:has(.grid-points:not(:empty)) {
-        grid-template-rows: 17% 83%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    & > *:nth-child(2) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        
+        overflow: hidden;
+        height: 0;
+        transition: height 500ms ease;
+    }
+    &:has(.grid-points:not(:empty)) > *:nth-child(2) {
+        height: 65dvh;
+        margin-top: 10dvh;
     }
     /// FIN TEST pour corrct° bug Webkit sur Grid ///
 }
