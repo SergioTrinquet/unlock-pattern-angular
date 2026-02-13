@@ -9,6 +9,13 @@
     &:has(.grid-points:not(:empty)) {
         grid-template-rows: 1fr 5fr;
     }
+
+    /// TEST pour corrct° bug Webkit sur Grid ///
+    grid-template-rows: 100% 0%;
+    &:has(.grid-points:not(:empty)) {
+        grid-template-rows: 17% 83%;
+    }
+    /// FIN TEST pour corrct° bug Webkit sur Grid ///
 }
 
 .wrapper-above-grid {
