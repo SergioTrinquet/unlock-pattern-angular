@@ -38,7 +38,7 @@ object[svgAnimation] {
     height: 100%;
     text-align: center;
     transition: transform calc(var(--time-transition-flipping-card) * 1s);
-    transform-style: preserve-3d; /* ===>>>> A UNE INCIDENCE SUR PROP. backdrop-filter: blur() !!!! */
+    transform-style: preserve-3d; /* ===>>>> A UNE INCIDENCE SUR PROP. backdrop-filter: blur() */
     // Indispensable juste pour Firefox sinon face arrière visible pendant le flip
     backface-visibility: hidden; 
     -webkit-backface-visibility: hidden;
@@ -232,3 +232,47 @@ canvas {
         opacity: 0;
     }
 }
+
+
+///// TEST pour détection Webkit (navigateurs sur iPhone et iPad)
+.essaiDetectWebkit-1,
+.essaiDetectWebkit-2 {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+}
+.essaiDetectWebkit-1 {
+    top: 100px;
+    background-color: red;
+    @supports (-webkit-overflow-scrolling: touch) {
+    /* iPhone + iPad uniquement */
+        &::after {
+            content: "Webkit détecté (iPhone ou iPad) !";
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-content: center;
+            font-weight: 700;
+        }
+    }
+}
+.essaiDetectWebkit-2 {
+    top: 100px;
+    left: 50vw;
+    background-color: greenyellow;
+    @media (hover: none) and (pointer: coarse) {
+    /* mobile/tablette */
+        @supports (-webkit-touch-callout: none) {
+        /* UNIQUEMENT Safari / WebKit iOS */
+            &::after {
+                content: "Webkit détecté (iPhone ou iPad) !";
+                position: absolute;
+                inset: 0;
+                display: grid;
+                place-content: center;
+                font-weight: 700;
+            }
+        }
+    }
+}
+///// FIN TEST pour détection Webkit (navigateurs sur iPhone et iPad)
