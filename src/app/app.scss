@@ -3,12 +3,12 @@
     display: grid;
     align-items: center;
     justify-items: center;
-    grid-template-rows: 1fr 0fr;
+    // grid-template-rows: 1fr 0fr;
     transition: grid-template-rows var(--transition-time-in-ms) ease;
 
-    &:has(.grid-points:not(:empty)) {
-        grid-template-rows: 1fr 5fr;
-    }
+    // &:has(.grid-points:not(:empty)) {
+    //     grid-template-rows: 1fr 5fr;
+    // }
 
     /// TEST pour corrct° bug Webkit sur Grid ///
     grid-template-rows: 100% 0%;
