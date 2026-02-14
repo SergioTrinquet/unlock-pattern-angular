@@ -1,8 +1,9 @@
-<!-- <div style="position: absolute; z-index: 100;">
-    <span style=" color: pink;">{{ "isPointerMoveActive : " + isPointerMoveActive }}</span>
+<div style="position: absolute; z-index: 100; top: 10px;">
+    <!-- <span style=" color: pink;">{{ "isPointerMoveActive : " + isPointerMoveActive }}</span>
     <span style="color: rgb(138, 255, 168); margin-left:30px;">capturedDots: {{ capturedDots() }}, length: [{{ capturedDots().length }}]</span>
-    <span style=" color: white;">{{ "flipOver : " + flipOver() }}</span>
-</div> -->
+    <span style=" color: white;">{{ "flipOver : " + flipOver() }}</span> -->
+    <span style=" color: white;">{{ "selectedValue : " + selectedValue }}</span>
+</div>
 <div class="flip-card" [class.flip-over]="flipOver()">
     <div class="flip-card-inner">
         <div #container
