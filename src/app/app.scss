@@ -26,7 +26,12 @@
         height: 0;
         transition: height 500ms ease;
     }
-    &:has(.grid-points:not(:empty)) > *:nth-child(2) {
+    /* &:has(.grid-points:not(:empty)) > *:nth-child(2) {
+        height: 65dvh;
+        margin-top: 10dvh;
+    } */
+    /* ou */
+    & > *:nth-child(2):has(.grid-points > div) {
         height: 65dvh;
         margin-top: 10dvh;
     }
