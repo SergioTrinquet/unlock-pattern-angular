@@ -17,7 +17,10 @@
             (pointerdown)="isTouchScreen && releasePointerCaptureOnTouchScreen($event)"
         >
             <canvas #canvasTag [width]="canvas().width" [height]="canvas().height"></canvas>
-            <div class="grid-points" [class.pulse]="gridAnimationClass()">
+            <div class="grid-points" [class.pulse]="gridAnimationClass()"
+            [class.nine-points]="selectedValue === 9"
+            [class.sixteen-points]="selectedValue === 16"
+            >
                 @for(i of nbDots(); track i) {
                     <div>
                         <div #dot 

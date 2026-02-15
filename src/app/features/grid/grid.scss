@@ -111,7 +111,16 @@ object[svgAnimation] {
 }
 .grid-points {
     display: grid;
-    grid-template-columns: repeat(var(--nb-points-par-lgn-col), 1fr);
+    // grid-template-columns: repeat(var(--nb-points-par-lgn-col), 1fr); // TEST : Mis en comm. pour rtentative résolution bug Webkit
+
+    ///// TEST pour résolution bug Webkit //////
+    &.nine-points {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    &.sixteen-points {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    ///// FIN TEST pour résolution bug Webkit //////
 
     aspect-ratio: 1 / 1;
     /* width: var(--side-grid);  */ /* Avec, on n'a plus l'anim qd selection ds liste déroulante */
