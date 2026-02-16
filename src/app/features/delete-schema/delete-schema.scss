@@ -33,8 +33,7 @@
         }
     }
 
-    // overflow: clip; // Tentative fix webkit pour fix effet survol : VERSION ORIGINALE
-    overflow: hidden; // Tentative fix webkit pour fix effet survol : VERSION MODIFIEE
+    overflow: hidden;
     &:before {
         content: "";
         position: absolute;
