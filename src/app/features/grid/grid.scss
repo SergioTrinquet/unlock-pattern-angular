@@ -19,7 +19,8 @@ object[svgAnimation] {
 
     /* Surcharge pour anim qd selection ds liste deroulante */
     // &:has(.grid-points:empty) { // Fix bug webkit sur apparit°/disparit° de la carte qd select° nb points dans select : VERSION ORIGINALE
-    &:not(:has(.grid-points > div)) { // Fix bug webkit sur apparit°/disparit° de la carte qd select° nb points dans select : VERSION MODIFIEE
+    //&:not(:has(.grid-points > div)) { // Fix bug webkit sur apparit°/disparit° de la carte qd select° nb points dans select : VERSION MODIFIEE
+    &.flip-card-hidden {
         overflow: hidden;
         opacity: 0;
         height: 0;

@@ -4,7 +4,7 @@
     <span style=" color: white;">{{ "flipOver : " + flipOver() }}</span> -->
     <span style=" color: white;">{{ "selectedValue : " + selectedValue }}</span>
 </div>
-<div class="flip-card" [class.flip-over]="flipOver()">
+<div class="flip-card" [class.flip-over]="flipOver()" [class.flip-card-hidden]="!selectedValue">
     <div class="flip-card-inner">
         <div #container
             class="container flip-card-front" 
@@ -17,10 +17,7 @@
             (pointerdown)="isTouchScreen && releasePointerCaptureOnTouchScreen($event)"
         >
             <canvas #canvasTag [width]="canvas().width" [height]="canvas().height"></canvas>
-            <div class="grid-points" [class.pulse]="gridAnimationClass()"
-            [class.nine-points]="selectedValue === 9"
-            [class.sixteen-points]="selectedValue === 16"
-            >
+            <!-- <div class="grid-points" [class.pulse]="gridAnimationClass()"> --><!--ou--><div class="grid-points" [class.pulse]="gridAnimationClass()" [class.nine-points]="selectedValue === 9" [class.sixteen-points]="selectedValue === 16">
                 @for(i of nbDots(); track i) {
                     <div>
                         <div #dot 
