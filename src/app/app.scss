@@ -81,26 +81,43 @@
         transition: opacity var(--transition-time-in-ms) ease;
     }
 
-     &:has(~ app-grid .grid-points) {
+    // Fix bug webkit sur apparit°/disparit° du message et de l'icône :
+    // Version originale qui fonctionne sur tt les nav et devices SAUF webkit (navigateurs sur iPhone et iPad)
+    /* &:has(~ app-grid .grid-points) {
         &:before,
         &:after {
             opacity: 0;
         }
     }
-    &:has(~ app-grid .grid-points:empty) {
+    &:has(~ app-grid .grid-points:empty) { 
+        &:before,
+        &:after {
+            opacity: 1;
+        }
+    } */
+
+    // Version modifiée pour fix webkit
+    &:has(~ app-grid .grid-points) {
         &:before,
         &:after {
             opacity: 1;
         }
     }
+    &:has(~ app-grid .grid-points > div) {
+        &:before,
+        &:after {
+            opacity: 0;
+        }
+    }
+    // FIN
 
-
+    /* // Vraiment utile ?
     &:has(~ app-grid .grid-points:empty) .msg {
         opacity: 0;
         transform: translateY(50px);
         transition-delay: 0s;
     }
-
+ */
     --message-top-position: max(7dvh, 40px);
 }
 @keyframes fadeInFromBottom {

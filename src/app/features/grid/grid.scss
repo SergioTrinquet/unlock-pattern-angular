@@ -14,7 +14,8 @@ object[svgAnimation] {
     }
 
     /* Surcharge pour anim qd selection ds liste deroulante */
-    &:has(.grid-points:empty) {
+    // &:has(.grid-points:empty) { // Fix bug webkit sur apparit°/disparit° de la carte qd select° nb points dans select : VERSION ORIGINALE
+    &:not(:has(.grid-points > div)) { // Fix bug webkit sur apparit°/disparit° de la carte qd select° nb points dans select : VERSION MODIFIEE
         overflow: hidden;
         opacity: 0;
         height: 0;
@@ -111,15 +112,10 @@ object[svgAnimation] {
 }
 .grid-points {
     display: grid;
-    // grid-template-columns: repeat(var(--nb-points-par-lgn-col), 1fr); // TEST : Mis en comm. pour rtentative résolution bug Webkit
-
-    ///// TEST pour résolution bug Webkit //////
-    &.nine-points {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    &.sixteen-points {
-        grid-template-columns: repeat(4, 1fr);
-    }
+    // grid-template-columns: repeat(var(--nb-points-par-lgn-col), 1fr); // TEST : A mettre en comm. qd ligns ci-dessous décommentées pour tentative résolution bug Webkit
+    ///// TEST pour résolution bug Webkit : Ne fonctionne pas //////
+    &.nine-points { grid-template-columns: repeat(3, 1fr); }
+    &.sixteen-points { grid-template-columns: repeat(4, 1fr); }
     ///// FIN TEST pour résolution bug Webkit //////
 
     aspect-ratio: 1 / 1;
