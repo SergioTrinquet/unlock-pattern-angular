@@ -70,9 +70,9 @@ object[svgAnimation] {
         height: var(--side-grid); 
         aspect-ratio: 1;
         background-color: var(--background-container);
-        /* -moz-backdrop-filter: blur(20px);
+        -moz-backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        backdrop-filter: blur(20px); */
+        backdrop-filter: blur(20px);
         border-radius: var(--border-radius);
         & > object {
             width: 70%;
@@ -124,9 +124,9 @@ object[svgAnimation] {
     border-radius: var(--border-radius);
     
     background-color: var(--background-container); 
-    /* -moz-backdrop-filter: blur(20px);
+    -moz-backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px); */
+    backdrop-filter: blur(20px);
 
 
     &.pulse::after {
