@@ -18,8 +18,7 @@ object[svgAnimation] {
     }
 
     /* Surcharge pour anim qd selection ds liste deroulante */
-    // &:has(.grid-points:empty) { // Fix bug webkit sur apparit°/disparit° de la carte qd select° nb points dans select : VERSION ORIGINALE
-    //&:not(:has(.grid-points > div)) { // Fix bug webkit sur apparit°/disparit° de la carte qd select° nb points dans select : VERSION MODIFIEE
+    //&:not(:has(.grid-points .dot)) { // Fix bug webkit sur apparit°/disparit° de la carte qd select° nb points dans select : VERSION MODIFIEE
     &.flip-card-hidden {
         overflow: hidden;
         opacity: 0;
@@ -71,9 +70,9 @@ object[svgAnimation] {
         height: var(--side-grid); 
         aspect-ratio: 1;
         background-color: var(--background-container);
-        -moz-backdrop-filter: blur(20px);
+        /* -moz-backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px); */
         border-radius: var(--border-radius);
         & > object {
             width: 70%;
@@ -125,9 +124,9 @@ object[svgAnimation] {
     border-radius: var(--border-radius);
     
     background-color: var(--background-container); 
-    -moz-backdrop-filter: blur(20px);
+    /* -moz-backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px); */
 
 
     &.pulse::after {
