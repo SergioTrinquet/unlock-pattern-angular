@@ -1,18 +1,18 @@
 :host {
     min-height: 100dvh;
-    display: grid;
+    //// VERSION ORIGINALE pour Android (PC et mobile) : Avant version fix webkit
+    /* display: grid;
     align-items: center;
     justify-items: center;
-    //// BONNE VERSION pour Android (PC et mobile) : A CONSERVER
-    /* grid-template-rows: 1fr 0fr;
+    grid-template-rows: 1fr 0fr;
     transition: grid-template-rows var(--transition-time-in-ms) ease;
 
     &:has(.grid-points .dot) {
         grid-template-rows: 1fr 5fr;
     } */
-    /// A CONSERVER
+    /// FIN VERSION ORIGINALE
 
-    /// TEST pour correct° bug Webkit sur Grid : FONCTIONNE AVEC WEBKIT (iPhone et iPad) ///
+    /// VERSION de correct° bug Webkit (iPhone et iPad) sur Grid ///
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -37,7 +37,7 @@
         height: 65dvh;
         margin-top: 12dvh;
     } */
-    /// FIN TEST pour corrct° bug Webkit sur Grid ///
+    /// FIN VERSION de correct° bug Webkit (iPhone et iPad) sur Grid ///
 }
 
 .wrapper-above-grid {
