@@ -89,16 +89,18 @@ object[svgAnimation] {
     }
 }
 
+// Code spécial webkit car bug de ce moteur de rendu sur animation "flip" : 
+// La face arrière apparaît, malgré "backface-visibility: hidden" : https://stackoverflow.com/questions/28773986/backface-visibility-hidden-not-working-on-webkit-browsers
 @media (hover: none) and (pointer: coarse) { // mobile/tablette  
-        @supports (-webkit-touch-callout: none) { // UNIQUEMENT Safari / WebKit iOS
-            .flip-card-front { opacity: 1; }
-            .flip-card-back { opacity: 0; }
-            .flip-card.flip-over {
-                .flip-card-front { opacity: 0; }
-                .flip-card-back { opacity: 1; }
-            } 
-        }
+    @supports (-webkit-touch-callout: none) { // UNIQUEMENT Safari / WebKit iOS
+        .flip-card-front { opacity: 1; }
+        .flip-card-back { opacity: 0; }
+        .flip-card.flip-over {
+            .flip-card-front { opacity: 0; }
+            .flip-card-back { opacity: 1; }
+        } 
     }
+}
 
 .container {
     &.no-events {
