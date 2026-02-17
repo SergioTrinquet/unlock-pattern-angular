@@ -4,18 +4,16 @@
     align-items: center;
     justify-items: center;
     //// BONNE VERSION pour Android (PC et mobile) : A CONSERVER
-    // grid-template-rows: 1fr 0fr;
-    grid-template-rows: 100% 0%; 
+    /* grid-template-rows: 1fr 0fr;
     transition: grid-template-rows var(--transition-time-in-ms) ease;
 
     &:has(.grid-points .dot) {
-        // grid-template-rows: 1fr 5fr;
-        grid-template-rows: 20% 80%;
-    }
+        grid-template-rows: 1fr 5fr;
+    } */
     /// A CONSERVER
 
-    /// TEST pour corrct° bug Webkit sur Grid ///
-    /* display: flex;
+    /// TEST pour correct° bug Webkit sur Grid : FONCTIONNE AVEC WEBKIT (iPhone et iPad) ///
+    display: flex;
     flex-direction: column;
     justify-content: center;
     & > *:nth-child(2) {
@@ -24,11 +22,18 @@
         justify-content: center;
         width: 100%;
         
-        overflow: hidden;
+        // overflow: hidden;
         height: 0;
-        transition: height 500ms ease;
+        margin-top: 0;
+        transition: height var(--transition-time-in-ms) ease, 
+                    margin-top var(--transition-time-in-ms) ease;
+
+        &:has(.grid-points .dot) {
+            height: 65dvh;
+            margin-top: 12dvh;
+        }
     }
-    & > *:nth-child(2):has(.grid-points .dot) { // FONCTIONNE AVEC WEBKIT (iPhone et iPad) : Sélecteur :has() appliqué directement sur l'élément ciblé par le changement de style (et pas sur un parent plus éloigné comme dans la version précédente)
+    /* & > *:nth-child(2):has(.grid-points .dot) {
         height: 65dvh;
         margin-top: 12dvh;
     } */
@@ -78,22 +83,6 @@
         transition: opacity var(--transition-time-in-ms) ease;
     }
 
-    // Fix bug webkit sur apparit°/disparit° du message et de l'icône :
-    // Version originale qui fonctionne sur tt les nav et devices SAUF webkit (navigateurs sur iPhone et iPad)
-    /* &:has(~ app-grid .grid-points) {
-        &:before,
-        &:after {
-            opacity: 0;
-        }
-    }
-    &:has(~ app-grid .grid-points:empty) { 
-        &:before,
-        &:after {
-            opacity: 1;
-        }
-    } */
-
-    // Version modifiée pour fix webkit
     &:has(~ app-grid .grid-points) {
         &:before,
         &:after {
@@ -106,7 +95,6 @@
             opacity: 0;
         }
     }
-    // FIN
 
     /* // Vraiment utile ?
     &:has(~ app-grid .grid-points:empty) .msg {
@@ -114,7 +102,7 @@
         transform: translateY(50px);
         transition-delay: 0s;
     }
- */
+    */
     --message-top-position: max(7dvh, 40px);
 }
 @keyframes fadeInFromBottom {
