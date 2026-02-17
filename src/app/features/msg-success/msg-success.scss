@@ -13,11 +13,12 @@
     -webkit-backdrop-filter: blur(100px);
     backdrop-filter: blur(100px);
     box-shadow: 0 0 var(--msg-success-height-shadow) rgb(33 33 33 / 70%);
-    opacity: 0;
+
     color: var(--color-font);
     font-size: clamp(2rem, 4vw, 3.5rem);
 
     @supports not (transition-behavior: allow-discrete) {
+        opacity: 0;
         animation: msgSuccessFadeIn 1s ease-in-out forwards;
         transition: translate calc(var(--time-transition-msg-success) * 1ms) ease-in;
     }
@@ -28,7 +29,7 @@
             opacity 1s ease-in-out,
             translate calc(var(--time-transition-msg-success) * 1ms) ease-in;
     }
-
+    
     & > div {
         place-self: center;
         text-align: center;
