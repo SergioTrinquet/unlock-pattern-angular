@@ -31,6 +31,10 @@ object[svgAnimation] {
             display: none;
         }
     }
+
+    &.flip-over .flip-card-inner {
+        transform: rotateY(180deg);
+    }
 }
 
 .flip-card-inner {
@@ -44,10 +48,6 @@ object[svgAnimation] {
     backface-visibility: hidden; 
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
-}
-
-.flip-card.flip-over .flip-card-inner {
-    transform: rotateY(180deg);
 }
 
 .flip-card-front, 
@@ -67,7 +67,7 @@ object[svgAnimation] {
     & > div {
         display: grid;
         place-items: center;
-        height: var(--side-grid); 
+        height: var(--side-grid);
         aspect-ratio: 1;
         background-color: var(--background-container);
         -moz-backdrop-filter: blur(20px);
@@ -88,6 +88,17 @@ object[svgAnimation] {
         }
     }
 }
+
+@media (hover: none) and (pointer: coarse) { // mobile/tablette  
+        @supports (-webkit-touch-callout: none) { // UNIQUEMENT Safari / WebKit iOS
+            .flip-card-front { opacity: 1; }
+            .flip-card-back { opacity: 0; }
+            .flip-card.flip-over {
+                .flip-card-front { opacity: 0; }
+                .flip-card-back { opacity: 1; }
+            } 
+        }
+    }
 
 .container {
     &.no-events {
