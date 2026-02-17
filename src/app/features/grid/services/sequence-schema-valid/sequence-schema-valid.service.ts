@@ -50,7 +50,7 @@ export class SequenceSchemaValidService {
         this.setSignal(this._growCardAfterFlipOver, false);
       }),
       delay(stepDelayBeforeMsgSuccessClose),
-      // tap(() => this.screenDisappearance()) // MIS EN COMM. LE 17/02 POUR TEST : RETIRER COMMENTAIRE APRES TEST
+      tap(() => this.screenDisappearance())
     ).subscribe();
   }
 
