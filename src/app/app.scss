@@ -22,7 +22,6 @@
         justify-content: center;
         width: 100%;
         
-        // overflow: hidden;
         height: 0;
         margin-top: 0;
         transition: height var(--transition-time-in-ms) ease, 
@@ -33,10 +32,6 @@
             margin-top: 12dvh;
         }
     }
-    /* & > *:nth-child(2):has(.grid-points .dot) {
-        height: 65dvh;
-        margin-top: 12dvh;
-    } */
     /// FIN VERSION de correct° bug Webkit (iPhone et iPad) sur Grid ///
 }
 
@@ -96,13 +91,6 @@
         }
     }
 
-    /* // Vraiment utile ?
-    &:has(~ app-grid .grid-points:empty) .msg {
-        opacity: 0;
-        transform: translateY(50px);
-        transition-delay: 0s;
-    }
-    */
     --message-top-position: max(7dvh, 40px);
 }
 @keyframes fadeInFromBottom {
