@@ -49,7 +49,6 @@ export class MessageService {
   }
 
   public setComplementaryInfos(calledFromClick?: MouseEvent["type"] | PointerEvent["type"] | undefined): void {  
-    console.log("Dans 'setComplementaryInfos > calledFromClick': ", calledFromClick); //TEST
     const currentSchemaNbDots: SchemaNbDotsConfig | null = this.currentSchemaNbDotsMinMax();
     const captureDotsLength = this.capturedDotsLength();
 

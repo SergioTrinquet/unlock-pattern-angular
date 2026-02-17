@@ -13,7 +13,6 @@
     --color-stroke-valid: rgb(145, 255, 151);
 
     --nb-points-par-lgn-col: 3;
-    --nb-points: calc(var(--nb-points-par-lgn-col) * var(--nb-points-par-lgn-col));
     /* FIN Valeurs par défaut */
 
     --border-radius: 2vh;
@@ -70,11 +69,9 @@ html {
 }
 body {
     overflow: hidden;
-    background: linear-gradient(to top, var(--background-screen-from) 50%, var(--background-screen-to) 100%); /* url("https://picsum.photos/1200/800") no-repeat center center; */ /* url("../svg/low-poly-grid-haikei.svg") no-repeat center center;background-size:cover; */
+    background: linear-gradient(to top, var(--background-screen-from) 50%, var(--background-screen-to) 100%); 
+    // background: url("https://picsum.photos/1200/800") no-repeat center center; 
 
-    &:has(.grid-points:not(:empty)) {
-        grid-template-rows: 1fr 5fr;
-    }
     &:has(.flip-card.flip-over) {
         pointer-events: none;
     }
