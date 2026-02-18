@@ -31,6 +31,14 @@ export class SvgAnimationDirective {
 
   public resetAnimations(): void {
     if (!this.svgDoc) return;
+
+    // TEST pour fix webkit : Animat° sur SVG ne fonctionne qu'une fois, après SVG pas visible
+    // Explicitly reset stroke-dashoffset for the SVG elements
+    (this.svgCheck['circle'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', '251.33');
+    (this.svgCheck['smallLine'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', '23.45');
+    (this.svgCheck['bigLine'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', '38.35');
+    // FIN TEST pour fix webkit
+
     const animTags = [
       { el: this.svgCheck['circle'], anim: this.svgDoc.getElementById('animCircleCheckIcon') },
       { el: this.svgCheck['smallLine'], anim: this.svgDoc.getElementById('animSmallLineCheckIcon') },
