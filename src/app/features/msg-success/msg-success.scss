@@ -13,7 +13,6 @@
     -webkit-backdrop-filter: blur(100px);
     backdrop-filter: blur(100px);
     box-shadow: 0 0 var(--msg-success-height-shadow) rgb(33 33 33 / 70%);
-
     color: var(--color-font);
     font-size: clamp(2rem, 4vw, 3.5rem);
 
@@ -29,7 +28,7 @@
             opacity 1s ease-in-out,
             translate calc(var(--time-transition-msg-success) * 1ms) ease-in;
     }
-    
+
     & > div {
         place-self: center;
         text-align: center;
@@ -45,8 +44,8 @@
                 'opsz' 24;
             content: "\e898";
             // content: "\f656";
-            position: absolute;
-            place-self: center;
+            /* position: absolute;
+            place-self: center; */  //Bug avec Safari iOS 
             font-size: clamp(3.2rem, 8vw, 5rem);
             margin: -2em 0 0 0;
             color: inherit;
