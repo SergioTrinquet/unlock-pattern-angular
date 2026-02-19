@@ -13,6 +13,11 @@ export class SvgAnimationDirective {
     smallLine: null,
     bigLine: null,
   };
+  private initialDashOffsets: Record<string, string | null | undefined> = {
+    circle: null,
+    smallLine: null,
+    bigLine: null,
+  };
 
   constructor(private el: ElementRef<HTMLObjectElement>) { }
 
@@ -24,6 +29,10 @@ export class SvgAnimationDirective {
     this.svgCheck['smallLine'] = this.svgDoc.querySelector('#smallLineCheckIcon');
     this.svgCheck['bigLine'] = this.svgDoc.querySelector('#bigLineCheckIcon');
 
+    this.initialDashOffsets['circle'] = this.svgCheck['circle']?.getAttribute('stroke-dashoffset');
+    this.initialDashOffsets['smallLine'] = this.svgCheck['smallLine']?.getAttribute('stroke-dashoffset');
+    this.initialDashOffsets['bigLine'] = this.svgCheck['bigLine']?.getAttribute('stroke-dashoffset');
+
     Object.values(this.svgCheck).forEach(el => {
       el?.setAttribute('stroke', STROKE.color[SCHEMA_ELEMENTS_COLOR_CLASS.valid]);
     });
@@ -32,12 +41,10 @@ export class SvgAnimationDirective {
   public resetAnimations(): void {
     if (!this.svgDoc) return;
 
-    // TEST pour fix webkit : Animat° sur SVG ne fonctionne qu'une fois, après SVG pas visible
-    // Explicitly reset stroke-dashoffset for the SVG elements
-    (this.svgCheck['circle'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', '251.33');
-    (this.svgCheck['smallLine'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', '23.45');
-    (this.svgCheck['bigLine'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', '38.35');
-    // FIN TEST pour fix webkit
+    // Fix bug webkit : On reset stroke-dashoffset explicitement pour chacun des éléments SVG
+    (this.svgCheck['circle'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', this.initialDashOffsets['circle'] || '');
+    (this.svgCheck['smallLine'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', this.initialDashOffsets['smallLine'] || '');
+    (this.svgCheck['bigLine'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', this.initialDashOffsets['bigLine'] || '');
 
     const animTags = [
       { el: this.svgCheck['circle'], anim: this.svgDoc.getElementById('animCircleCheckIcon') },
