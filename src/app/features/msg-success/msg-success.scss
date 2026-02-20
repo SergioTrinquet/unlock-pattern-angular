@@ -44,8 +44,6 @@
                 'opsz' 24;
             content: "\e898";
             // content: "\f656";
-            /* position: absolute;
-            place-self: center; */  //Bug avec Safari iOS 
             font-size: clamp(3.2rem, 8vw, 5rem);
             margin: -2em 0 0 0;
             color: inherit;
