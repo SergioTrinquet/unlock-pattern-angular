@@ -220,7 +220,7 @@ object[svgAnimation] {
 canvas {
     position: absolute;
     inset: 0;
-    z-index: 1;
+    z-index: 1; /* TEST : Fix bug sur Android Chrome pour ne pas avoir le tracé en dessous de '.grid-points'  */
 }
 
 @keyframes vibrate {
