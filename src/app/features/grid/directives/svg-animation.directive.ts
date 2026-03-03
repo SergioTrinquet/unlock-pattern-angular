@@ -13,11 +13,11 @@ export class SvgAnimationDirective {
     smallLine: null,
     bigLine: null,
   };
-  private initialDashOffsets: Record<string, string | null | undefined> = {
+  /* private initialDashOffsets: Record<string, string | null | undefined> = {
     circle: null,
     smallLine: null,
     bigLine: null,
-  };
+  }; */
 
         // 03/06/26 : Store the initial data URL of the SVG object
         private svgDataUrl: string | null = null;
@@ -37,9 +37,9 @@ export class SvgAnimationDirective {
     this.svgCheck['smallLine'] = this.svgDoc.querySelector('#smallLineCheckIcon');
     this.svgCheck['bigLine'] = this.svgDoc.querySelector('#bigLineCheckIcon');
 
-    this.initialDashOffsets['circle'] = this.svgCheck['circle']?.getAttribute('stroke-dashoffset');
+/*     this.initialDashOffsets['circle'] = this.svgCheck['circle']?.getAttribute('stroke-dashoffset');
     this.initialDashOffsets['smallLine'] = this.svgCheck['smallLine']?.getAttribute('stroke-dashoffset');
-    this.initialDashOffsets['bigLine'] = this.svgCheck['bigLine']?.getAttribute('stroke-dashoffset');
+    this.initialDashOffsets['bigLine'] = this.svgCheck['bigLine']?.getAttribute('stroke-dashoffset'); */
 
     Object.values(this.svgCheck).forEach(el => {
       el?.setAttribute('stroke', STROKE.color[SCHEMA_ELEMENTS_COLOR_CLASS.valid]);
@@ -49,10 +49,10 @@ export class SvgAnimationDirective {
   public resetAnimations(): void {
     if (!this.svgDoc) return;
 
-    // Fix bug webkit : On reset stroke-dashoffset explicitement pour chacun des éléments SVG
+    /* // Fix bug webkit : On reset stroke-dashoffset explicitement pour chacun des éléments SVG
     (this.svgCheck['circle'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', this.initialDashOffsets['circle'] || '');
     (this.svgCheck['smallLine'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', this.initialDashOffsets['smallLine'] || '');
-    (this.svgCheck['bigLine'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', this.initialDashOffsets['bigLine'] || '');
+    (this.svgCheck['bigLine'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', this.initialDashOffsets['bigLine'] || ''); */
 
     const animTags = [
       { el: this.svgCheck['circle'], anim: this.svgDoc.getElementById('animCircleCheckIcon') },
