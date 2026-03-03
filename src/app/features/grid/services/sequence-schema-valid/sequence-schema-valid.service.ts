@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { of, tap, delay } from 'rxjs';
+import { of, tap, delay, concatMap, from } from 'rxjs';
 import { SEQUENCE_ANIMATION_DRAWING_SUCCESS } from '../../constants/grid.constants';
 import { SvgAnimationDirective } from '../../directives/svg-animation.directive';
 import { SelectControlService } from '../../../select/services';
@@ -30,13 +30,28 @@ export class SequenceSchemaValidService {
 
   public runSequenceSchemaValid(): void {
     const { stepCardFlip, stepAnimSVG, stepDisplayMsgSuccess, stepDelayBeforeMsgSuccessClose } = SEQUENCE_ANIMATION_DRAWING_SUCCESS;
+    
+    /* 
+    ///// 03/06/26 : Ancienne version
     of(null).pipe(
       tap(() => {
         this.svg.init();
         this.setSignal(this._cardFlipOver, true);
         this.svg.resetAnimations();
       }),
-      delay(stepCardFlip),
+      delay(stepCardFlip), */
+    ///// 03/06/26 : FIN Ancienne version
+    ///// 03/06/26 : Nouvelle version
+    from(this.svg.reloadAndInitSvg()).pipe(
+      concatMap(() => {
+        // At this point, the SVG is reloaded and the SvgAnimationDirective is re-initialized.
+        this.svg.init();
+        this.setSignal(this._cardFlipOver, true);
+        this.svg.resetAnimations(); // Now it's safe to call resetAnimations as the SVG is ready
+        return of(null).pipe(delay(stepCardFlip));
+      }),
+    ///// 03/06/26 : FIN Nouvelle version
+
       tap(() => this.svg.startAnimation()),
       delay(stepAnimSVG),
       tap(() => {
