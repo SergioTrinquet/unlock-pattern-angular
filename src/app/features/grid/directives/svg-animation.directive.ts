@@ -13,33 +13,24 @@ export class SvgAnimationDirective {
     smallLine: null,
     bigLine: null,
   };
-  /* private initialDashOffsets: Record<string, string | null | undefined> = {
-    circle: null,
-    smallLine: null,
-    bigLine: null,
-  }; */
 
         // 03/06/26 : Store the initial data URL of the SVG object
         private svgDataUrl: string | null = null;
 
   constructor(private el: ElementRef<HTMLObjectElement>) { }
 
-   public init(): void {
+  public init(): void {
     this.svgDoc = this.el.nativeElement.contentDocument;
     if(!this.svgDoc) return;
 
-        // 03/06/26 :Capture the data URL only once when init is called for the first time    
-         if (!this.svgDataUrl) {
-           this.svgDataUrl = this.el.nativeElement.data;
-         }
+    // 03/06/26 :Capture the data URL only once when init is called for the first time    
+    /* if (!this.svgDataUrl) {
+      this.svgDataUrl = this.el.nativeElement.data;
+    } */
 
     this.svgCheck['circle'] = this.svgDoc.querySelector('#circleCheckIcon');
     this.svgCheck['smallLine'] = this.svgDoc.querySelector('#smallLineCheckIcon');
     this.svgCheck['bigLine'] = this.svgDoc.querySelector('#bigLineCheckIcon');
-
-/*     this.initialDashOffsets['circle'] = this.svgCheck['circle']?.getAttribute('stroke-dashoffset');
-    this.initialDashOffsets['smallLine'] = this.svgCheck['smallLine']?.getAttribute('stroke-dashoffset');
-    this.initialDashOffsets['bigLine'] = this.svgCheck['bigLine']?.getAttribute('stroke-dashoffset'); */
 
     Object.values(this.svgCheck).forEach(el => {
       el?.setAttribute('stroke', STROKE.color[SCHEMA_ELEMENTS_COLOR_CLASS.valid]);
@@ -48,11 +39,6 @@ export class SvgAnimationDirective {
 
   public resetAnimations(): void {
     if (!this.svgDoc) return;
-
-    /* // Fix bug webkit : On reset stroke-dashoffset explicitement pour chacun des éléments SVG
-    (this.svgCheck['circle'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', this.initialDashOffsets['circle'] || '');
-    (this.svgCheck['smallLine'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', this.initialDashOffsets['smallLine'] || '');
-    (this.svgCheck['bigLine'] as SVGGeometryElement)?.setAttribute('stroke-dashoffset', this.initialDashOffsets['bigLine'] || ''); */
 
     const animTags = [
       { el: this.svgCheck['circle'], anim: this.svgDoc.getElementById('animCircleCheckIcon') },
@@ -76,7 +62,7 @@ export class SvgAnimationDirective {
 
 
 ////////// 03/06/26 ////////////
-  // New method to reload the SVG and ensure initialization is complete.
+  // Fix bug sur webkit devices, sur l'animation du SVG qui ne se fait que la 1ere fois, et pas ensuite : On s'assure que le reload du SVG et l'initialisation est complète.
   // Retourne une Promesse qui est "resolve" qd le SVG est reloadé et initialisé.
   public reloadAndInitSvg(): Promise<void> {
     return new Promise((resolve) => {
@@ -88,13 +74,13 @@ export class SvgAnimationDirective {
               this.el.nativeElement.data = this.svgDataUrl;
               // Wait for the 'load' event of the object element to ensure SVG content is read
               this.el.nativeElement.onload = () => {
-                this.init(); // Re-initialize the directive after the SVG loads
+                // this.init(); // Re-initialize the directive after the SVG loads
                 resolve();
               };
               // Fallback for cases where onload might not fire immediately, though less reliable
               setTimeout(() => {
                   if(!this.svgDoc) { // If init() wasn't called by onload
-                      this.init();
+                      // this.init();
                       resolve();
                   }
               }, 100); // Increased timeout to 100ms for robustness
@@ -103,7 +89,8 @@ export class SvgAnimationDirective {
             }
           });
       } else {
-        this.init(); // First time, just init
+        // this.init(); // First time, just init
+        this.svgDataUrl = this.el.nativeElement.data;
         resolve();
       }
     });
