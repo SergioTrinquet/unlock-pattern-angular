@@ -1,18 +1,5 @@
 :host {
     min-height: 100dvh;
-    //// VERSION ORIGINALE pour Android (PC et mobile) : Avant version fix webkit
-    /* display: grid;
-    align-items: center;
-    justify-items: center;
-    grid-template-rows: 1fr 0fr;
-    transition: grid-template-rows var(--transition-time-in-ms) ease;
-
-    &:has(.grid-points .dot) {
-        grid-template-rows: 1fr 5fr;
-    } */
-    /// FIN VERSION ORIGINALE
-
-    /// VERSION de correct° bug Webkit (iPhone et iPad) sur Grid ///
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -29,10 +16,12 @@
 
         &:has(.grid-points .dot) {
             height: 65dvh;
-            margin-top: 12dvh;
+            margin-top: 16dvh;
+            @media screen and (max-height: 620px) {
+                margin-top: 18dvh;
+            }
         }
     }
-    /// FIN VERSION de correct° bug Webkit (iPhone et iPad) sur Grid ///
 }
 
 .wrapper-above-grid {
@@ -91,7 +80,7 @@
         }
     }
 
-    --message-top-position: max(7dvh, 40px);
+    --message-top-position: max(7dvh, 55px);
 }
 @keyframes fadeInFromBottom {
     0% {
