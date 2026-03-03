@@ -70,9 +70,6 @@ object[svgAnimation] {
         height: var(--side-grid);
         aspect-ratio: 1;
         background-color: var(--background-container);
-        /* -moz-backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        backdrop-filter: blur(20px); */ // MISE EN COMM. blur car points et tracé floutés sur Chrome iOS.
         border-radius: var(--border-radius);
         & > object {
             width: 70%;
@@ -136,10 +133,7 @@ object[svgAnimation] {
     height: var(--side-grid); 
     border-radius: var(--border-radius);
     
-    background-color: var(--background-container); 
-    /* -moz-backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px); */  // MISE EN COMM. blur car points et tracé floutés sur Chrome iOS.
+    background-color: var(--background-container);
 
 
     &.pulse::after {
