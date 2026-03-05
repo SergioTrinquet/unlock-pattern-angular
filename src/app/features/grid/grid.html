@@ -20,7 +20,9 @@
             (pointerdown)="isTouchScreen && releasePointerCaptureOnTouchScreen($event)"
         >
             <canvas #canvasTag [width]="canvas().width" [height]="canvas().height"></canvas>
-            <!-- <div class="grid-points" [class.pulse]="gridAnimationClass()"> --><!--ou--><div class="grid-points" [class.pulse]="gridAnimationClass()" [class.nine-points]="selectedValue === 9" [class.sixteen-points]="selectedValue === 16">
+            <!-- <div class="grid-points" [class.pulse]="gridAnimationClass()"> -->
+            <!--ou--><div class="grid-points" [class.pulse]="gridAnimationClass()" [class.nine-points]="selectedValue === 9" [class.sixteen-points]="selectedValue === 16">
+            <!--ou--><!-- <div class="grid-points" [class.pulse]="gridAnimationClass()" [style.--nb-points-par-lgn-col]="selectedValue !== null && selectedValue !== undefined ? Math.sqrt(selectedValue) : 0"> -->
                 @for(i of nbDots(); track i) {
                     <div>
                         <div #dot 
@@ -46,7 +48,6 @@
 }
 
 
-<!-- TEST pour détection Webkit (navigateurs sur iPhone et iPad) -->
- <div class="essaiDetectWebkit-1"></div>
- <div class="essaiDetectWebkit-2"></div>
-<!-- FIN TEST pour détection Webkit (navigateurs sur iPhone et iPad) -->
+<!-- Pour tester détection Webkit (navigateurs sur iPhone et iPad) -->
+ <!-- <div class="essaiDetectWebkit-1"></div>
+ <div class="essaiDetectWebkit-2"></div> -->
