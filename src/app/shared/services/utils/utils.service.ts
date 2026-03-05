@@ -4,12 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class UtilsService {
-  getComputedStyles(customProperty: string): number {
-      const root = document.documentElement;
-      const computedStyles = getComputedStyle(root);
-      return parseInt(computedStyles.getPropertyValue(customProperty));
-  }
-
   public setCustomProperties(styles: styles): void {
     if (Object.prototype.toString.call(styles) === '[object Object]') {
       const root = document.documentElement;
