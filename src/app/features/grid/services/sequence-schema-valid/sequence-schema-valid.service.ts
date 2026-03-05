@@ -31,27 +31,14 @@ export class SequenceSchemaValidService {
   public runSequenceSchemaValid(): void {
     const { stepCardFlip, stepAnimSVG, stepDisplayMsgSuccess, stepDelayBeforeMsgSuccessClose } = SEQUENCE_ANIMATION_DRAWING_SUCCESS;
     
-    /* 
-    ///// 03/06/26 : Ancienne version
-    of(null).pipe(
-      tap(() => {
+    from(this.svg.reloadSvg()).pipe( // reloadSvg() mis en place pour fixer le bug propre aux navihateurs webkit
+      concatMap(() => {
+        // A ce point, le SVG est bien reloadé (reloadSvg() terminé)
         this.svg.init();
         this.setSignal(this._cardFlipOver, true);
         this.svg.resetAnimations();
-      }),
-      delay(stepCardFlip), */
-    ///// 03/06/26 : FIN Ancienne version
-    ///// 03/06/26 : Nouvelle version
-    from(this.svg.reloadAndInitSvg()).pipe(
-      concatMap(() => {
-        // At this point, the SVG is reloaded and the SvgAnimationDirective is re-initialized.
-        this.svg.init();
-        this.setSignal(this._cardFlipOver, true);
-        this.svg.resetAnimations(); // Now it's safe to call resetAnimations as the SVG is ready
         return of(null).pipe(delay(stepCardFlip));
       }),
-    ///// 03/06/26 : FIN Nouvelle version
-
       tap(() => this.svg.startAnimation()),
       delay(stepAnimSVG),
       tap(() => {

@@ -51,32 +51,32 @@ export class SvgAnimationDirective {
     this.svgDoc?.querySelector<SVGAnimationElement>('#animCircleCheckIcon')?.beginElement();
   }
 
-  // Fix bug sur webkit devices, sur l'animation du SVG qui ne se fait que la 1ere fois, et pas ensuite : On s'assure que le reload du SVG et l'initialisation est complète.
-  // Retourne une Promesse qui est "resolve" qd le SVG est reloadé et initialisé.
-  public reloadAndInitSvg(): Promise<void> {
+  // Fix bug sur webkit devices: Animation du SVG qui ne se fait que la 1ere fois, et pas ensuite => On s'assure que le reload du SVG se fait.
+  // Retourne une Promesse qui est "resolved" qd le SVG est reloadé.
+  public reloadSvg(): Promise<void> {
     return new Promise((resolve) => {
         if (this.svgDataUrl) {
-          // Temporarily remove and then restore the data attribute to force reload
+          // On retire temporairement puis on restaure l'attribut data pour forcer le reload
           this.el.nativeElement.data = '';
-          queueMicrotask(() => { // Use queueMicrotask to ensure DOM update
+          queueMicrotask(() => { // queueMicrotask pour s'assurer de l'update du DOM
             if (this.svgDataUrl) {
               this.el.nativeElement.data = this.svgDataUrl;
-              // Wait for the 'load' event of the object element to ensure SVG content is read
+              // On attend l'événement 'load' de l'élément object pour s'assurer que le contenu SVG est bien pris en compte
               this.el.nativeElement.onload = () => {
                 resolve();
               };
-              // Fallback for cases where onload might not fire immediately, though less reliable
+              // On ajoute un Falback qui est le timeout ci-dessous pour s'assurer que la promesse est résolue même si l'événement 'load' ne se déclenche pas comme prévu (ex: sur certains navigateurs ou conditions de cache)
               setTimeout(() => {
-                  if(!this.svgDoc) { // If resolve() wasn't called by onload
+                  if(!this.svgDoc) { // Si resolve() n'a pas été appelé par onload
                       resolve();
                   }
-              }, 100); // Increased timeout to 100ms for robustness
+              }, 100); // On met le timeout à 100ms pour robusté
             } else {
-              resolve(); // No data URL, resolve immediately
+              resolve(); // Si pas de data URL, resolve immédiatement
             }
           });
       } else {
-        this.svgDataUrl = this.el.nativeElement.data; // First time, just init
+        this.svgDataUrl = this.el.nativeElement.data; // 1er appel : on stocke la data URL du SVG
         resolve();
       }
     });
