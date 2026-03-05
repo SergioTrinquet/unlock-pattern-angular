@@ -73,6 +73,8 @@ export class GridComponent implements OnDestroy {
   private flagCallResizeObservation = false;
   private resizeTimeout: ReturnType<typeof setTimeout> = 0;
 
+  // Math = Math; // Pour pouvoir utiliser Math dans le template (ex: pour calculer la position des points sur la grille)
+
   constructor() {
     // Pour stopper tracé du schéma si besoin qd nb de points survolés max.
     effect(() => {
