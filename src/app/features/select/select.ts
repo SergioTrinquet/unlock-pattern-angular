@@ -25,7 +25,7 @@ export class SelectComponent implements AfterViewInit {
     this.selectControlService.register(this.selectRef.nativeElement);
   }
 
-  onChangeSelect(event: Event): void {
+  protected onChangeSelect(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const selectedValue: number | null = parseInt(selectElement.value) || null;
     this.valueChange.emit(selectedValue);

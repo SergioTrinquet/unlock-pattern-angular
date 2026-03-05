@@ -10,7 +10,7 @@ export class UtilsService {
       return parseInt(computedStyles.getPropertyValue(customProperty));
   }
 
-  setCustomProperties(styles: styles): void {
+  public setCustomProperties(styles: styles): void {
     if (Object.prototype.toString.call(styles) === '[object Object]') {
       const root = document.documentElement;
       for (const [property, value] of Object.entries(styles)) {
