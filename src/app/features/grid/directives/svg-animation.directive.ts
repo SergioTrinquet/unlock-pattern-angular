@@ -13,20 +13,13 @@ export class SvgAnimationDirective {
     smallLine: null,
     bigLine: null,
   };
-
-        // 03/06/26 : Store the initial data URL of the SVG object
-        private svgDataUrl: string | null = null;
+  private svgDataUrl: string | null = null;
 
   constructor(private el: ElementRef<HTMLObjectElement>) { }
 
   public init(): void {
     this.svgDoc = this.el.nativeElement.contentDocument;
     if(!this.svgDoc) return;
-
-    // 03/06/26 :Capture the data URL only once when init is called for the first time    
-    /* if (!this.svgDataUrl) {
-      this.svgDataUrl = this.el.nativeElement.data;
-    } */
 
     this.svgCheck['circle'] = this.svgDoc.querySelector('#circleCheckIcon');
     this.svgCheck['smallLine'] = this.svgDoc.querySelector('#smallLineCheckIcon');
@@ -58,10 +51,6 @@ export class SvgAnimationDirective {
     this.svgDoc?.querySelector<SVGAnimationElement>('#animCircleCheckIcon')?.beginElement();
   }
 
-
-
-
-////////// 03/06/26 ////////////
   // Fix bug sur webkit devices, sur l'animation du SVG qui ne se fait que la 1ere fois, et pas ensuite : On s'assure que le reload du SVG et l'initialisation est complète.
   // Retourne une Promesse qui est "resolve" qd le SVG est reloadé et initialisé.
   public reloadAndInitSvg(): Promise<void> {
@@ -74,13 +63,11 @@ export class SvgAnimationDirective {
               this.el.nativeElement.data = this.svgDataUrl;
               // Wait for the 'load' event of the object element to ensure SVG content is read
               this.el.nativeElement.onload = () => {
-                // this.init(); // Re-initialize the directive after the SVG loads
                 resolve();
               };
               // Fallback for cases where onload might not fire immediately, though less reliable
               setTimeout(() => {
-                  if(!this.svgDoc) { // If init() wasn't called by onload
-                      // this.init();
+                  if(!this.svgDoc) { // If resolve() wasn't called by onload
                       resolve();
                   }
               }, 100); // Increased timeout to 100ms for robustness
@@ -89,14 +76,10 @@ export class SvgAnimationDirective {
             }
           });
       } else {
-        // this.init(); // First time, just init
-        this.svgDataUrl = this.el.nativeElement.data;
+        this.svgDataUrl = this.el.nativeElement.data; // First time, just init
         resolve();
       }
     });
   }
-/////////// Fin 03/06/26 ///////////
-
-
 
 }

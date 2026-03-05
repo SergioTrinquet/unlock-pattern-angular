@@ -54,12 +54,10 @@ export class MessageService {
 
     // A la sélection d'une Grid OU qd tracé supprimé et que donc pas de points capturés
     if(!captureDotsLength) {
-      console.log(`%cToujours dans setComplementaryInfos : 1`, 'background-color: #32cd32;font-style: italic;') //
       this.displayComplementaryInfos({text: `${this.isSchemaRecorded() ? MSG_LABELS.draw : MSG_LABELS.creation}`, anim: true});
     }
     const isSchemaValid = this.schemaValidityService.checkSchemaValidity();
     if(calledFromClick) {
-      console.log(`%cToujours dans setComplementaryInfos : 2`, 'background-color: #32cd32;font-style: italic;') //
       if(!this.isSchemaRecorded()) {
         if(isSchemaValid) {
           this.displayComplementaryInfos({showButtons: true, anim: true});
@@ -75,7 +73,7 @@ export class MessageService {
         }
       }
     } else {
-      if(!this.isSchemaRecorded()) {    console.log(`%cToujours dans setComplementaryInfos : 3`, 'background-color: #32cd32;font-style: italic;', "isSchemaValid: ", isSchemaValid) //
+      if(!this.isSchemaRecorded()) {
         if(isSchemaValid) {
           this.displayComplementaryInfos({text: MSG_LABELS.valid, className: MSG_CSS_CLASS.valid, anim: true});
         }
@@ -94,7 +92,6 @@ export class MessageService {
   }
 
   private displayComplementaryInfos(pm: message): void {
-    console.log("%cpm.text: ", 'background-color: lightblue; color: #000;', pm.text, pm.showButtons, "=>", !pm.showButtons); //TEST
     if(pm.text === this.previousInfoText) return;
     this.previousInfoText = pm.text;
 

@@ -5,7 +5,7 @@ object[svgAnimation] {
     width: max(70dvmin, 400px);
     height: max(70dvmin, 400px);
     scale: 1;
-    perspective: 1000px; /* for 3D effect */
+    perspective: 1000px; // Pour effet 3D
     z-index: 2; /* Pour anim qd card retourné zoome : Doit passer au dessus des éléments en haut de page */
     transition: scale var(--transition-time-in-ms) ease,
             margin var(--transition-time-in-ms) ease,
@@ -43,7 +43,7 @@ object[svgAnimation] {
     height: 100%;
     text-align: center;
     transition: transform calc(var(--time-transition-flipping-card) * 1s);
-    transform-style: preserve-3d; /* ===>>>> A UNE INCIDENCE SUR PROP. backdrop-filter: blur() */
+    transform-style: preserve-3d;
     // Indispensable juste pour Firefox sinon face arrière visible pendant le flip
     backface-visibility: hidden; 
     -webkit-backface-visibility: hidden;
@@ -142,14 +142,9 @@ object[svgAnimation] {
         box-shadow: inset var(--color-stroke-valid) 0 0 0px 0px, var(--color-stroke-valid) 0 0 0 10px;
         border-radius: var(--border-radius);
         animation: pulse var(--time-pulse-in-ms) cubic-bezier(0, 0.5, 0.35, 1) forwards;
-        /* Version SANS 'backdrop-filter' sur sélecteur '.grid-points' */
-        /* height: var(--side-grid);
+        height: var(--side-grid);
         width: var(--side-grid);
-        background-color: var(--background-container); */
-        
-        /* Version AVEC 'backdrop-filter' sur sélecteur '.grid-points' */
-        height: 100%;
-        width: 100%;
+        // background-color: var(--background-container);
         background-color: var(--color-stroke);
     }
 
@@ -252,9 +247,9 @@ canvas {
     position: absolute;
     width: 100px;
     height: 100px;
+    top: 100px;
 }
 .essaiDetectWebkit-1 {
-    top: 100px;
     background-color: red;
     @supports (-webkit-overflow-scrolling: touch) {
     /* iPhone + iPad uniquement */
@@ -269,8 +264,7 @@ canvas {
     }
 }
 .essaiDetectWebkit-2 {
-    top: 100px;
-    left: 50vw;
+    left: 55vw;
     background-color: greenyellow;
     @media (hover: none) and (pointer: coarse) {
     /* mobile/tablette */

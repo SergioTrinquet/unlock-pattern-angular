@@ -14,7 +14,6 @@ export class UtilsService {
     if (Object.prototype.toString.call(styles) === '[object Object]') {
       const root = document.documentElement;
       for (const [property, value] of Object.entries(styles)) {
-          // console.log("setCustomProperties() ", property, String(value))
           root.style.setProperty(property, String(value));
       }
     }
