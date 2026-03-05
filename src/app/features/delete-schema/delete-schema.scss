@@ -7,6 +7,7 @@
     padding: 0.1rem 1rem 0.3rem;
     position: absolute;
     top: calc(var(--message-top-position) + 6dvh);
+    font-size: 0.85rem;
 
     opacity: 0;
     @supports not (transition-behavior: allow-discrete) {
@@ -23,7 +24,7 @@
 
     &.display {
         opacity: 1;
-        margin-top: 0dvh;
+        margin-top: 0.25dvh;
         @supports (transition-behavior: allow-discrete) {
             display: block;
             @starting-style {
